@@ -326,14 +326,18 @@
             transform-style: preserve-3d;
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 1s ease;
             padding: 20px;
+            
+            /* --- CRITICAL CENTERING FIX --- */
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-evenly;
+            align-items: center;    /* Centers children horizontally */
+            justify-content: space-evenly; /* Even spacing vertically */
+            
             text-align: center;
             border: 1px solid #ffe0e0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             backface-visibility: hidden; 
+            -webkit-backface-visibility: hidden; /* Fix for Chrome Mobile */
         }
 
         .page.flipped { 
@@ -547,31 +551,29 @@
         .back-to-book-btn:hover { transform: scale(1.05); }
 
         .plant-garden-btn {
-            /* 1. New Rose-Themed Gradient (Matches the theme better) */
             background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             color: white;
             border: none;
             
-            /* 2. Better Sizing & Layout */
-            width: auto;            /* Don't stretch it too wide */
-            min-width: 200px;       /* Ensure it's big enough to tap */
-            padding: 14px 30px;     /* Comfortable padding */
-            margin: 15px auto;      /* Center it */
-            border-radius: 50px;    /* Rounded pill shape */
+            /* --- BOX MODEL FIX --- */
+            display: flex;          /* Changed from inline-flex */
+            margin: 15px auto;      /* auto margins center the block */
+            width: 85%;             /* Fluid width for mobile */
+            max-width: 280px;       /* Keeps it from looking weird on larger screens */
             
-            /* 3. Text Formatting */
+            min-width: 200px;
+            padding: 14px 20px;
+            border-radius: 50px;
             font-family: 'Nunito', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: bold;
-            white-space: nowrap;    /* <--- THIS FIXES THE WEIRD TEXT WRAPPING */
             
-            /* 4. Flexbox Alignment (Keeps stars and text aligned) */
-            display: inline-flex;
+            /* Keeps stars and text together without wrapping weirdly */
             justify-content: center;
             align-items: center;
-            gap: 10px;              /* Space between text and stars */
+            gap: 8px;
+            white-space: nowrap;    
             
-            /* 5. Shadow & Animation */
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(255, 118, 142, 0.4); 
             animation: pulse 2s infinite;
@@ -1243,7 +1245,8 @@
         <div class="gif-container">
             <img src="https://media1.tenor.com/m/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif" alt="Kissing">
         </div>
-        <h1>YAY! I knew it! ❤️</h1>
+        <h1>YAY!</h1>
+        <h1>I knew it! ❤️</h1>
         <p style="font-size: 1.3rem; margin-top: 15px;">Get ready for a surprise...</p>
     </div>
 
@@ -1287,8 +1290,8 @@
                 <div class="gif-box"><img src="https://media.tenor.com/5hNFjHWQYKQAAAAi/bubu-dudu-sseeyall.gif"></div>
                 <p>To the flower that blooms in my heart forever.</p>
                 
-                <button class="plant-garden-btn" onclick="openGarden()">
-                    ✨ Click to Plant a Garden ✨
+                <button class="plant-garden-btn" onclick="openGarden()" style="position: relative; z-index: 50;">
+                    ✨ Click to Plant a Garden 
                 </button>
 
                 <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
@@ -1763,6 +1766,16 @@
     <script>
         // --- 1. EXISTING BOOK LOGIC ---
         function openEnvelope() {
+            // Chrome Mobile Audio "Priming"
+            const audio1 = document.getElementById("bg-music1");
+            const audio2 = document.getElementById("bg-music2");
+            const audio3 = document.getElementById("bg-music3");
+            const kissAudio = document.getElementById("kiss-355162.mp3");
+
+            // Play and immediately pause to "unlock" the audio context
+            [audio1, audio2, audio3, kissAudio].forEach(a => {
+                if(a) { a.play().then(() => a.pause()); }
+            });
             const envelope = document.getElementById('envelope');
             const wrapper = document.getElementById('envelope-wrapper');
             const hook = document.getElementById('hook-container');
@@ -2687,4 +2700,3 @@
     </script>
 </body>
 </html>
-

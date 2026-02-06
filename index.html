@@ -396,22 +396,23 @@
 
         .gif-box {
             width: 100%;
-            max-height: 45%;
-            overflow: hidden;
+            height: auto;
+            min-height: 200px; /* Ensure space for GIF */
+            overflow: visible; /* Prevent cutting off */
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-bottom: 10px;
         }
 
         .gif-box img { 
-            width: 90%; 
-            max-height: 200px;
+            width: auto; 
+            height: auto;
+            max-width: 100%;
+            max-height: 250px; /* Allow it to be taller */
             object-fit: contain;
             border-radius: 10px; 
-            border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
         }
-        
         .next-btn {
             background: #ff4d6d;
             color: white;
@@ -840,10 +841,14 @@
             border-radius: 50%; 
             display: flex; 
             justify-content: center; 
-            align-items: flex-end; /* Sit at bottom */
+            align-items: flex-end; 
             box-shadow: 0 0 40px rgba(255, 192, 203, 0.4);
             margin-bottom: 20px;
-            overflow: visible; /* Important so bubble can float outside */
+            overflow: visible;
+            
+            /* FIXED: Move bear slightly left so bubble fits on screen */
+            margin-right: 40px; 
+            transform: scale(1.1); /* Make it slightly bigger */
         }
 
         /* 1. MAKE TEDDY BIGGER */
@@ -948,10 +953,11 @@
         /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER --- */
         .thought-bubble {
             position: absolute;
-            top: 0px;           /* High up near the ear */
-            right: -130px;        /* Pushed out to the side */
+            top: -10px;          
+            right: -80px;  /* Brought closer (was -130px) */
             z-index: 10;
             animation: floatDream 3s ease-in-out infinite;
+            transform: scale(0.9); /* Slight adjust to fit mobile width */
         }
 
         /* The Photo Inside */
@@ -987,21 +993,17 @@
         
         /* --- DAY 5: CONTRACT (PHOTO BACKGROUND - UPDATED SIZE & OPACITY) --- */
         .contract-paper {
-            width: 95%; /* Wider on mobile */
-            max-width: 550px; /* Much BIGGER max size */
-            
-            /* 1. The Background Photo */
+            width: 95%;
+            max-width: 550px;
+            /* Ensure background photo is centered and covers the area */
             background-image: url('1767294746239(1)(1).jpg'); 
             background-size: cover;
             background-position: center;
-            
             border-radius: 15px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
-            border: 3px solid #fff; /* Thicker border */
+            border: 3px solid #fff;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease-out; /* Smooth opening pop */
-            transform: scale(0.9); /* Start slightly smaller for effect */
             display: flex; align-items: center; justify-content: center;
         }
         
@@ -1012,19 +1014,18 @@
 
         /* 2. The Less-Translucent "Glass" Box */
         .contract-content {
-            /* Solid white with slight transparency for readability */
-            background: rgba(255, 255, 255, 0.95); 
+            /* CHANGED: Lower opacity (0.6) so the background photo is visible */
+            background: rgba(255, 255, 255, 0.6); 
             
-            backdrop-filter: blur(5px); 
+            backdrop-filter: blur(3px); 
             margin: 10px;
-            padding: 20px; 
+            padding: 15px; 
             border-radius: 10px;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            
-            /* Fix height issues on small screens */
-            max-height: 85vh;
-            overflow-y: auto; 
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         /* Make the text BOLD and darker for readability */
@@ -1033,6 +1034,16 @@
             color: #1a0509;   /* Almost black/dark red for contrast */
             text-shadow: 0 1px 2px rgba(255,255,255,0.9); /* White glow behind text */
             margin-bottom: 8px;
+        }
+
+        .contract-content h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem !important; /* Smaller size to fit one line */
+            margin-bottom: 10px;
+            text-align: center;
+            white-space: nowrap; /* Forces text to stay on one line */
+            color: #d81b60;
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.8);
         }
         
         .contract-content p {
@@ -1561,8 +1572,9 @@
         <div class="contract-paper">
             <div class="contract-content">
                 
-                <h2 style="color: #d81b60; font-family: 'Great Vibes'; font-size: 2.8rem; margin-bottom: 10px; text-align:center; text-shadow: 2px 2px 0px rgba(255,255,255,0.8);">❤️ The Love Contract ❤️</h2>
-                <p style="font-size: 1.2rem; margin-bottom: 15px; text-align: center;">I, the beautiful and amazing <strong>Seju</strong>, hereby solemnly promise to:</p>
+                <h2 style="color: #d81b60; font-family: 'Great Vibes'; margin-bottom: 10px; text-align:center; text-shadow: 2px 2px 0px rgba(255,255,255,0.8);">❤️ The Love Contract ❤️</h2>
+                
+                <p style="font-size: 1.1rem; margin-bottom: 10px; text-align: center; font-weight: bold;">I, the beautiful and amazing <strong>Seju</strong>, hereby solemnly promise to:</p>
                 
                 <ul style="text-align:left; padding-left:20px; font-size:1rem; line-height:1.7; color: #444;">
                     <li>Always share my chocolates (even the last piece... maybe). 🍫</li>

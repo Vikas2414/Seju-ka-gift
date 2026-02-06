@@ -761,30 +761,31 @@
 
         /* --- THE POPPED STATE (Active) --- */
 
-        /* 1. Make wrapper visible & move up slightly */
+        /* --- THE POPPED STATE (Fixed Position) --- */
+
+        /* 1. Lift the Wrapper */
         .jewelry-box.popped #ring-wrapper {
              opacity: 1 !important;
-             /* translateY(-60px): Moves it UP out of the box
-                rotateX(-20deg): COUNTER-ROTATES to fix the tilt!
-             */
+             /* Rotate -20deg to straighten it up */
              transform: translateY(-60px) rotateX(-20deg) !important;
              z-index: 9999;
         }
 
-        /* 2. Photo POP UP */
+        /* 2. Photo: High up & Stable */
         .jewelry-box.popped .pop-up-photo {
-            /* translateZ(10px): Keeps it slightly separated from wrapper
-               scale(1.0): Full size
-               translateY(-280px): Moves it HIGH above the box
+            opacity: 1 !important;
+            /* translateY(-280px): High up
+               rotateZ(360deg): THE TRICK. Forces the GPU to draw it.
             */
-            transform: translateX(-50%) translateY(-280px) scale(1.0) translateZ(10px) !important; 
+            transform: translateX(-50%) translateY(-280px) scale(1.0) translateZ(10px) rotateZ(360deg) !important; 
+            z-index: 9999 !important;
         }
 
-        /* 3. Ring POP UP */
+        /* 3. Ring: Lower & Smaller */
         .jewelry-box.popped #ring-canvas-container {
             opacity: 1 !important;
-            /* Ring stays lower (-140px) than the photo */
-            transform: translateY(-140px) scale(0.8) translateZ(50px) !important;
+            /* Lower than photo (-120px) */
+            transform: translateY(-120px) translateZ(50px) rotateZ(360deg) !important;
         }
 
         /* Ring Base Styles */
@@ -1011,17 +1012,19 @@
 
         /* 2. The Less-Translucent "Glass" Box */
         .contract-content {
-            /* CHANGED: 0.94 makes it mostly opaque, just a hint of the photo shows */
-            background: rgba(255, 253, 240, 0.4); 
+            /* Solid white with slight transparency for readability */
+            background: rgba(255, 255, 255, 0.95); 
             
-            /* CHANGED: Higher blur makes text much more readable */
-            backdrop-filter: blur(3px); 
-            
-            margin: 15px;
-            padding: 25px; /* More padding */
+            backdrop-filter: blur(5px); 
+            margin: 10px;
+            padding: 20px; 
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.8);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            
+            /* Fix height issues on small screens */
+            max-height: 85vh;
+            overflow-y: auto; 
         }
 
         /* Make the text BOLD and darker for readability */
@@ -2310,7 +2313,11 @@
             ringMesh.add(holder);
             ringMesh.add(stone);
             
-            // Initial Rotation (so it looks nice before animating)
+            // --- NEW CODE TO SHRINK RING ---
+            ringMesh.scale.set(0.6, 0.6, 0.6); // Shrink to 60% size
+            ringMesh.position.y = -0.5; // Move it down slightly in the canvas
+            
+            // Initial Rotation
             ringMesh.rotation.x = 0.2; 
             
             ringScene.add(ringMesh);
@@ -2513,15 +2520,44 @@
             openOverlay('promise-overlay');
             const canvas = document.getElementById('sig-canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
+            
+            // Fix canvas resolution for sharp drawing
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            
+            ctx.strokeStyle = "#d81b60"; // Pink signature!
+            ctx.lineWidth = 3;
+            ctx.lineCap = "round";
             
             let drawing = false;
+
+            // --- MOUSE EVENTS (Desktop) ---
             canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
             canvas.addEventListener('mousemove', (e) => { if(drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
             canvas.addEventListener('mouseup', () => drawing = false);
+
+            // --- TOUCH EVENTS (Mobile Fix) ---
+            // This prevents scrolling while signing and tracks the finger
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Stop screen dragging
+                drawing = true;
+                const touch = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.beginPath();
+                ctx.moveTo(touch.clientX - r.left, touch.clientY - r.top);
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // Stop screen dragging
+                if (!drawing) return;
+                const touch = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(touch.clientX - r.left, touch.clientY - r.top);
+                ctx.stroke();
+            }, { passive: false });
+
+            canvas.addEventListener('touchend', () => drawing = false);
         }
         function submitContract() {
             const stamp = document.getElementById('stamp');

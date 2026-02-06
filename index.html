@@ -1840,7 +1840,7 @@
 
         function handleNo() {
             const audio1 = document.getElementById("bg-music1");
-            audio1.volume = 0.5; 
+            audio1.volume = 1; 
             if (audio1.paused) { audio1.loop = true; audio1.play().catch(error => console.log("Audio play failed: ", error)); }
 
             clickCount++;
@@ -2687,3 +2687,4 @@
     </script>
 </body>
 </html>
+

@@ -728,24 +728,25 @@
         /* --- FIX: POP UP PHOTO ALIGNMENT --- */
         .pop-up-photo {
             position: absolute;
-            bottom: 20px;           
+            bottom: 20px;            
             left: 50%;
-            /* translateZ(100px) forces it to the front of the lid */
-            transform: translateX(-50%) scale(0.2) translateZ(100px); 
-            width: 200px;           
-            height: auto;          
+            /* transform: translateX(-50%) scale(0.2) translateZ(100px);  <-- OLD */
+            transform: translateX(-50%) scale(0.2) translateZ(10px); /* Start further back */
+            width: 200px;            
+            height: auto;           
             max-height: 350px; 
-            object-fit: contain;    
+            object-fit: contain;     
             background-color: #fff; 
             border: 5px solid #fff; 
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 9999 !important;
+            z-index: 100; /* Lower z-index initially */
             opacity: 0;
             transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1.2);
             /* Important for Mobile Chrome */
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
+            will-change: transform, opacity; /* Hint to mobile browser to render properly */
         }
 
         /* The Ring Container */
@@ -760,20 +761,31 @@
             transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
             z-index: 5; 
             pointer-events: none;
+            /* CRITICAL FIX FOR MOBILE: */
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
+
+        /* THIS IS THE MISSING RULE THAT FIXES IT */
+        .jewelry-box.popped #ring-wrapper {
+             opacity: 1 !important;
+             transform: translateY(-50px) scale(1) !important;
+             z-index: 200;
         }
 
         /* Centering the photo when popped */
         .jewelry-box.popped .pop-up-photo {
-            opacity: 1;
-            /* Added translateZ(200px) to ensure it stays above everything */
-            transform: translateX(-50%) translateY(-350px) scale(1.15) translateZ(200px); 
+            opacity: 1 !important;
+            /* translateZ(500px) forces it WAY in front of the box on mobile */
+            transform: translateX(-50%) translateY(-300px) scale(1.15) translateZ(500px) !important; 
+            z-index: 200 !important;
         }
 
         /* Aligning the Ring with the Photo */
         .jewelry-box.popped #ring-canvas-container {
-            opacity: 1;
-            /* translateZ(250px) puts it even further in front of the photo */
-            transform: translateY(-300px) scale(1.3) translateZ(250px);
+            opacity: 1 !important;
+            /* translateZ(600px) ensures ring is in front of photo */
+            transform: translateY(-250px) scale(1.3) translateZ(600px) !important;
             transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         

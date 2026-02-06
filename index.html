@@ -944,23 +944,28 @@
             background: #b71c1c; z-index: 6; border-top: 2px solid #ffd700; border-bottom: 2px solid #ffd700;
         }
 
-        /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER --- */
+        /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER (UPDATED) --- */
         .thought-bubble {
             position: absolute;
-            top: 0px;           /* High up near the ear */
-            right: -130px;        /* Pushed out to the side */
+            /* Move it up slightly */
+            top: -40px;          
+            /* Move it much closer to the center (was -80px) */
+            right: -20px;  
             z-index: 10;
             animation: floatDream 3s ease-in-out infinite;
+            /* Scale the whole bubble up */
+            transform: scale(1.1); 
         }
 
-        /* The Photo Inside */
+        /* The Photo Inside (MADE BIGGER) */
         .thought-bubble img {
-            width: 180px;        
-            height: 100px;       
+            /* Increased size from 180px/100px */
+            width: 220px;        
+            height: 140px;       
             object-fit: cover;
-            border: 4px solid #fff;
-            border-radius: 20px; /* Rounded corners like a bubble */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            border: 5px solid #fff; /* Thicker border */
+            border-radius: 20px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             background: #fff;
         }
 
@@ -1541,10 +1546,10 @@
         </div>
 
         <div class="thought-bubble">
-            <div class="bubble-dot dot-1"></div>
-            <div class="bubble-dot dot-2"></div>
-            <div class="bubble-dot dot-3"></div>
-            <div class="bubble-dot dot-4"></div>
+            <div class="bubble-dot dot-1" style="bottom: -40px; left: 10px;"></div>
+            <div class="bubble-dot dot-2" style="bottom: -30px; left: 25px;"></div>
+            <div class="bubble-dot dot-3" style="bottom: -15px; left: 40px;"></div>
+            
             <img src="Image_1770362948844.jpg" alt="Dreaming of Us">
         </div>
     </div>

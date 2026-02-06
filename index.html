@@ -730,8 +730,8 @@
             position: absolute;
             bottom: 20px;            
             left: 50%;
-            /* transform: translateX(-50%) scale(0.2) translateZ(100px);  <-- OLD */
-            transform: translateX(-50%) scale(0.2) translateZ(10px); /* Start further back */
+            /* Start small and inside the box */
+            transform: translateX(-50%) scale(0.2) translateZ(10px); 
             width: 200px;            
             height: auto;           
             max-height: 350px; 
@@ -740,16 +740,21 @@
             border: 5px solid #fff; 
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 100; /* Lower z-index initially */
+            z-index: 50; 
             opacity: 0;
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1.2);
-            /* Important for Mobile Chrome */
+            
+            /* ANIMATION SETTINGS */
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease;
+            
+            /* CRITICAL MOBILE FIXES */
+            -webkit-backface-visibility: visible !important;
+            backface-visibility: visible !important;
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
-            will-change: transform, opacity; /* Hint to mobile browser to render properly */
+            will-change: transform, opacity;
         }
 
-        /* The Ring Container */
+        /* The Wrapper for Photo + Ring */
         #ring-wrapper {
             position: absolute;
             bottom: 30px;
@@ -758,47 +763,45 @@
             justify-content: center;
             opacity: 0;
             transform: translateY(20px) scale(0.5); 
-            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
-            z-index: 5; 
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 50;
             pointer-events: none;
-            /* CRITICAL FIX FOR MOBILE: */
-            transform-style: preserve-3d;
+            
+            /* CRITICAL MOBILE FIXES */
             -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
         }
 
         /* THIS IS THE MISSING RULE THAT FIXES IT */
         .jewelry-box.popped #ring-wrapper {
-             opacity: 1 !important;
-             transform: translateY(-50px) scale(1) !important;
-             z-index: 200;
+            opacity: 1 !important;
+            /* Move up, but don't scale the wrapper, scale the children instead */
+            transform: translateY(-50px) scale(1) !important;
+            z-index: 9999;
         }
 
-        /* Centering the photo when popped */
+        /* 2. Move the PHOTO up */
         .jewelry-box.popped .pop-up-photo {
             opacity: 1 !important;
-            /* translateZ(500px) forces it WAY in front of the box on mobile */
-            transform: translateX(-50%) translateY(-300px) scale(1.15) translateZ(500px) !important; 
-            z-index: 200 !important;
+            /* translateZ(150px) is safer than 500px. It ensures it stays "inside" the screen */
+            transform: translateX(-50%) translateY(-300px) scale(1.15) translateZ(150px) !important; 
+            z-index: 9999 !important;
         }
 
         /* Aligning the Ring with the Photo */
         .jewelry-box.popped #ring-canvas-container {
             opacity: 1 !important;
-            /* translateZ(600px) ensures ring is in front of photo */
-            transform: translateY(-250px) scale(1.3) translateZ(600px) !important;
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Ring sits slightly in front of photo (180px vs 150px) */
+            transform: translateY(-250px) scale(1.3) translateZ(180px) !important;
         }
-        
+
         #ring-canvas-container {
             width: 160px;
             height: 160px;
-            filter: drop-shadow(0 10px 15px rgba(255, 215, 0, 0.4));
             position: relative;
             z-index: 10000;
             opacity: 0;
-            transform: scale(0.5) translateZ(150px);
-            -webkit-transform-style: preserve-3d;
-            transform-style: preserve-3d;
+            transform: scale(0.5) translateZ(50px);
         }
 
         /* --- DAY 3: SCRATCH (Updated for 9:16 Photo) --- */

@@ -714,25 +714,21 @@
             position: absolute;
             bottom: 20px;            
             left: 50%;
-            /* Start Position: Small and hidden */
             transform: translateX(-50%) translateY(0) scale(0.5); 
             
-            width: 280px;            
-            height: auto;           
-            max-height: 400px; 
+            /* Logic: Be 50% of the screen height, width will adjust automatically */
+            width: auto;            
+            height: 50vh;           
+            max-width: 90vw; /* Don't get wider than the phone */
+            
             object-fit: contain;     
             background-color: #fff; 
             border: 5px solid #fff; 
             border-radius: 12px;
-            
-            /* Shadow adds depth between photo and ring */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             z-index: 50; 
-            
-            /* Slower transition for the photo scaling effect */
             transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            
-            -webkit-backface-visibility: hidden; /* Hides jagged edges */
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
         }
 
@@ -773,18 +769,15 @@
         /* 2. Photo: High up & Stable */
         .jewelry-box.popped .pop-up-photo {
             opacity: 1 !important;
-            /* translateY(-280px): High up
-               rotateZ(360deg): THE TRICK. Forces the GPU to draw it.
-            */
-            transform: translateX(-50%) translateY(-350px) scale(1.0) translateZ(10px) !important; 
+            /* translateY(-340px) is the sweet spot for a 50vh image */
+            transform: translateX(-50%) translateY(-340px) scale(1.0) translateZ(10px) rotateZ(360deg) !important; 
             z-index: 9999 !important;
         }
-
-        /* 3. Ring: Lower & Smaller */
+        
+        /* Keep Ring Container Lower so it doesn't overlap the feet */
         .jewelry-box.popped #ring-canvas-container {
             opacity: 1 !important;
-            /* Lower than photo (-120px) */
-            transform: translateY(-120px) translateZ(50px) rotateZ(360deg) !important;
+            transform: translateY(-100px) scale(0.8) translateZ(50px) rotateZ(360deg) !important;
         }
 
         /* Ring Base Styles */
@@ -839,10 +832,15 @@
             border-radius: 50%; 
             display: flex; 
             justify-content: center; 
-            align-items: flex-end; /* Sit at bottom */
+            align-items: flex-end; 
             box-shadow: 0 0 40px rgba(255, 192, 203, 0.4);
-            margin-bottom: 20px;
-            overflow: visible; /* Important so bubble can float outside */
+            
+            /* Standard centering */
+            margin: 0 auto 20px auto; 
+            overflow: visible;
+            
+            /* Increase overall size */
+            transform: scale(1.2); 
         }
 
         /* 1. MAKE TEDDY BIGGER */
@@ -947,26 +945,17 @@
         /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER (UPDATED) --- */
         .thought-bubble {
             position: absolute;
-            /* Move it up slightly */
-            top: -40px;          
-            /* Move it much closer to the center (was -80px) */
-            right: -20px;  
+            top: -20px;          
+            right: -40px; 
             z-index: 10;
             animation: floatDream 3s ease-in-out infinite;
-            /* Scale the whole bubble up */
-            transform: scale(1.1); 
         }
-
-        /* The Photo Inside (MADE BIGGER) */
+        
         .thought-bubble img {
-            /* Increased size from 180px/100px */
-            width: 220px;        
-            height: 140px;       
-            object-fit: cover;
-            border: 5px solid #fff; /* Thicker border */
-            border-radius: 20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            background: #fff;
+            width: 150px; /* Slightly smaller to ensure it fits the width */
+            height: auto;
+            border: 4px solid #fff;
+            border-radius: 15px;
         }
 
         /* --- 3. THE BUBBLE DOTS TRAIL --- */
@@ -1037,6 +1026,16 @@
             color: #1a0509;   /* Almost black/dark red for contrast */
             text-shadow: 0 1px 2px rgba(255,255,255,0.9); /* White glow behind text */
             margin-bottom: 8px;
+        }
+
+        .contract-content h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem !important; /* Smaller size to fit one line */
+            margin-bottom: 10px;
+            text-align: center;
+            white-space: nowrap; /* Forces text to stay on one line */
+            color: #d81b60;
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.8);
         }
         
         .contract-content p {

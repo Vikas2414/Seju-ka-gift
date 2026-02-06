@@ -2191,6 +2191,9 @@
         function openProposeMode() {
             openOverlay('propose-overlay');
             initRing();
+            setTimeout(() => {
+                initRing();
+            }, 100);
             
             const box = document.getElementById('box-container');
             const jewelryBox = document.querySelector('.jewelry-box');

@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Seju ❤️</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* --- GLOBAL STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); 
+            background: radial-gradient(circle, #ffe6e6 0%, #ffc0c0 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Nunito', sans-serif;
+            position: relative;
+        }
+
+        /* --- BACKGROUND FLOATING HEARTS --- */
+        .bg-heart {
+            position: absolute;
+            bottom: -50px;
+            color: rgba(255, 50, 50, 0.3);
+            font-size: 24px;
+            animation: floatUp 10s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; opacity: 0; }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ENVELOPE STYLES --- */
+        #envelope-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.8);
+            transition: opacity 1s ease;
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #f4e1d2;
+            border-radius: 5px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            cursor: pointer;
+            animation: shake 3s infinite ease-in-out;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            5% { transform: rotate(2deg); }
+            10% { transform: rotate(-2deg); }
+            15% { transform: rotate(1deg); }
+            20% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .envelope.open {
+            animation: none;
+            cursor: default;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #e6cfbd;
+            transform-origin: top;
+            transition: transform 0.6s ease 0.2s, z-index 0.2s;
+            z-index: 5;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .pocket {
+            position: absolute;
+            bottom: 0; left: 0; width: 0; height: 0;
+            border-left: 150px solid #f4e1d2;
+            border-right: 150px solid #f4e1d2;
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid #e6cfbd;
+            border-radius: 0 0 5px 5px;
+            z-index: 4;
+        }
+
+        .letter {
+            position: absolute;
+            bottom: 0;
+            width: 260px;
+            height: 180px;
+            background: #fff;
+            border-radius: 5px;
+            transition: transform 0.8s ease 0.8s;
+            z-index: 2;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        }
+
+        .letter h2 {
+            font-family: 'Great Vibes', cursive;
+            color: #d81b60;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .letter p {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .envelope.open .letter {
+            transform: translateY(-120px);
+            z-index: 6;
+        }
+
+        .seal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px; height: 50px;
+            background: #d81b60;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 2px solid #a01346;
+            z-index: 6;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.5s;
+            margin-top: -35px;
+        }
+
+        .seal:hover { transform: translate(-50%, -50%) scale(1.1); }
+        .envelope.open .seal { opacity: 0; pointer-events: none; }
+
+        /* --- CONTAINERS --- */
+        #hook-container, #story-container, #proposal-container, #celebration-container {
+            z-index: 10;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            width: 90%; 
+            max-width: 450px;
+            transition: opacity 0.5s ease;
+            border: 2px solid #fff;
+            position: absolute;
+        }
+
+        /* --- STORY PAGE STYLES --- */
+        .story-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ffccd5;
+        }
+        .story-section:last-child { border-bottom: none; }
+
+        .story-title {
+            color: #d81b60;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .story-date {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .live-timer {
+            font-family: 'Courier New', monospace;
+            background: #fff0f5;
+            color: #c2185b;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: inline-block;
+            border: 1px solid #ffccd5;
+        }
+
+        .gif-container img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #d81b60;
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(255, 200, 200, 0.5);
+            line-height: 1.2;
+        }
+
+        .emotional-text {
+            color: #c2185b;
+            font-size: 1.1rem;
+            font-weight: 700;
+            min-height: 30px;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap; 
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #yes-btn { 
+            background: linear-gradient(45deg, #ff4d6d, #ff0040);
+            color: white; 
+            box-shadow: 0 5px 15px rgba(255, 0, 60, 0.3);
+        }
+        #yes-btn:hover { transform: scale(1.1); }
+
+        #no-btn { 
+            background: #fff; 
+            color: #555; 
+            border: 2px solid #eee; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .continue-btn {
+            background: linear-gradient(45deg, #ff8fa3, #ff4d6d);
+            color: white;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        /* --- 3D BOOK (RESPONSIVE) --- */
+        #book-wrapper {
+            display: none;
+            perspective: 2000px;
+            z-index: 20;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .book {
+            width: 85vw;
+            max-width: 350px;
+            height: 70vh; /* Slightly taller to fit button */
+            max-height: 560px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #fff5f5, #fff);
+            border-radius: 15px;
+            transform-origin: center; 
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 1s ease;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            text-align: center;
+            border: 1px solid #ffe0e0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backface-visibility: hidden; 
+        }
+
+        .page.flipped { 
+            transform: rotateY(-180deg) scale(0.9); 
+            opacity: 0;
+            pointer-events: none; 
+        }
+        
+        .page h2 { 
+            font-family: 'Great Vibes', cursive; 
+            font-size: 2.2rem; 
+            color: #d81b60; 
+            margin: 0;
+        }
+        
+        .page p { 
+            font-size: 1rem; 
+            color: #444; 
+            line-height: 1.5;
+            margin: 5px 0;
+        }
+
+        .day-badge {
+            background: #ffecb3;
+            color: #d81b60;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 5px;
+        }
+
+        #countdown-mini {
+            font-size: 0.9rem;
+            color: #d81b60;
+            font-weight: bold;
+            background: #fff0f5;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ffccd5;
+            margin-top: 5px;
+        }
+
+        .gif-box {
+            width: 100%;
+            max-height: 45%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gif-box img { 
+            width: 90%; 
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 10px; 
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+        
+        .next-btn {
+            background: #ff4d6d;
+            color: white;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* --- LOCK SCREEN --- */
+        .lock-overlay {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .numpad .num {
+            background: #fff;
+            border: 2px solid #ffd6de;
+            border-radius: 8px;
+            height: 56px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+        }
+        .numpad .num:active { transform: translateY(1px); }
+        .shake { animation: shakeX 0.5s; }
+        @keyframes shakeX {
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
+
+        /* --- FLOWER GARDEN STYLES (FLEXIBLE PHOTO) --- */
+        #garden-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; /* Changed to 100% for better mobile fit */
+            
+            /* PHOTO SETTINGS */
+            background-image: url('Snapchat-542392648.jpg'); /* Put your photo URL here */
+            background-repeat: no-repeat;
+            background-position: center center;
+            
+            /* 'contain' = Shows WHOLE photo (flexible, adds empty space if needed) */
+            /* 'cover' = Fills screen (zooms in, might crop faces) */
+            background-size: contain; 
+            
+            background-color: #fce4ec; /* Soft pink color for any empty space */
+            
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* This overlay helps the text/flowers pop out against the photo */
+        #garden-wrapper::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.1); /* Very subtle overlay */
+            pointer-events: none;
+        }
+        
+        #garden-canvas {
+            width: 100%; height: 100%;
+            display: block;
+        }
+
+        .garden-ui {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        .garden-header {
+            position: absolute;
+            top: 2rem;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .garden-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .garden-hint {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+            transition: opacity 1s ease;
+        }
+        .garden-hint.fade-out { opacity: 0; }
+
+        .garden-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        .garden-btn {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            color: #2c3e50;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .garden-btn:hover { transform: translateY(-3px); background: #fff; }
+        .garden-btn.active { background: #ff6b6b; color: white; }
+
+        .back-to-book-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+            color: #d81b60;
+            cursor: pointer;
+            pointer-events: auto;
+            z-index: 20;
+            transition: transform 0.2s;
+        }
+        .back-to-book-btn:hover { transform: scale(1.05); }
+
+        .plant-garden-btn {
+            /* 1. New Rose-Themed Gradient (Matches the theme better) */
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            color: white;
+            border: none;
+            
+            /* 2. Better Sizing & Layout */
+            width: auto;            /* Don't stretch it too wide */
+            min-width: 200px;       /* Ensure it's big enough to tap */
+            padding: 14px 30px;     /* Comfortable padding */
+            margin: 15px auto;      /* Center it */
+            border-radius: 50px;    /* Rounded pill shape */
+            
+            /* 3. Text Formatting */
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            white-space: nowrap;    /* <--- THIS FIXES THE WEIRD TEXT WRAPPING */
+            
+            /* 4. Flexbox Alignment (Keeps stars and text aligned) */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;              /* Space between text and stars */
+            
+            /* 5. Shadow & Animation */
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 118, 142, 0.4); 
+            animation: pulse 2s infinite;
+            transition: transform 0.2s;
+        }
+
+        .plant-garden-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 118, 142, 0.6);
+        }
+
+        /* Subtle Pulse Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- GENERIC OVERLAY --- */
+        .hidden-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 200;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.5s;
+        }
+        
+        .close-overlay {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255,255,255,0.3); 
+            border: 2px solid rgba(255,255,255,0.5); /* Added subtle border */
+            color: white;
+            font-size: 1.2rem; 
+            width: 40px; height: 40px; 
+            border-radius: 50%;
+            cursor: pointer; z-index: 201;
+            /* Flexbox ensures perfect centering */
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            padding: 0;
+            transition: background 0.3s;
+        }
+        .close-overlay:hover { background: rgba(255,255,255,0.5); 
+        }
+        .instruction-text { color: white; margin-top: 20px; font-family: 'Nunito'; letter-spacing: 1px; }
+        .action-btn {
+            background: #ff4d6d; color: white; border: none; padding: 10px 20px;
+            border-radius: 20px; font-weight: bold; margin-top: 15px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* --- DAY 2: JEWELRY BOX (CORRECTED) --- */
+        #box-container { 
+            perspective: 1000px; 
+            width: 220px; 
+            height: 220px; 
+            position: relative; 
+            margin-top: 50px; 
+        }
+        
+        .jewelry-box {
+            width: 100%; height: 100%; 
+            position: relative; 
+            transform-style: preserve-3d;
+        }
+
+        /* The Bottom of the Box */
+        .box-base {
+            position: absolute; 
+            bottom: 0; 
+            width: 220px; 
+            height: 100px; 
+            background: radial-gradient(circle at center, #8a1c36, #4a0e1c); 
+            border-radius: 0 0 20px 20px; 
+            transform: rotateX(20deg);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.4);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+
+        /* The Gold Trim/Clasp */
+        .box-base::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            width: 40px;
+            height: 10px;
+            background: linear-gradient(to right, #daa520, #ffd700, #daa520);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+        }
+
+        /* The Lid */
+        .lid {
+            position: absolute; 
+            top: 0; 
+            width: 220px; 
+            height: 100px; 
+            background: radial-gradient(circle at center, #a02240, #5c1224); 
+            border-radius: 20px 20px 0 0; 
+            transform-origin: bottom;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            box-shadow: inset 0 -5px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* Lid Interior */
+        .lid-interior {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: #fdf0f3; 
+            border-radius: 20px 20px 0 0;
+            transform: rotateX(180deg); 
+            
+            /* CRITICAL: Allows the photo to exist in 3D space */
+            transform-style: preserve-3d; 
+            
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* WE REMOVED THE ::after RULE SO NO TEXT APPEARS */
+
+        .lid.open { 
+            transform: rotateX(110deg); 
+        }
+        
+        /* --- FIX: MAXIMUM SIZE PHOTO --- */
+        .pop-up-photo {
+            position: absolute;
+            /* Sit lower in the box so we can make it taller */
+            bottom: 20px;           
+            left: 50%;
+            transform: translateX(-50%);
+            
+            /* 1. MAX WIDTH: 180px (The box is 220px, so this is the limit!) */
+            width: 220px;           
+            
+            /* 2. MAX HEIGHT: Increased significantly */
+            height: 400px;          
+            
+            /* 3. FIT: Ensures your photo isn't cropped */
+            object-fit: contain;    
+            background-color: #fff; 
+            
+            border: 4px solid #fff; 
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 0; 
+        }
+
+        /* The Ring Container */
+        #ring-wrapper {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px) scale(0.5); 
+            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            z-index: 5; 
+            pointer-events: none;
+        }
+
+        /* The Pop Up State */
+        .jewelry-box.popped #ring-wrapper {
+            opacity: 1;
+            transform: translateY(-90px) scale(1.3); 
+        }
+
+        #ring-canvas-container { 
+            width: 160px; 
+            height: 160px;
+            filter: drop-shadow(0 10px 15px rgba(255, 215, 0, 0.4));
+            
+            /* ✅ Add these lines to keep the ring in front of the photo */
+            position: relative;
+            z-index: 10; 
+        }
+
+        /* --- DAY 3: SCRATCH (Updated for 9:16 Photo) --- */
+        .scratch-container { 
+            position: relative; 
+            width: 300px; 
+            height: 533px; /* Changed to 9:16 Aspect Ratio */
+            max-height: 75vh; /* Ensures it fits on mobile screens */
+            background: white; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        }
+        .secret-message {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
+        }
+        /* Make the photo fit perfectly */
+        .secret-message img {
+            width: auto;
+            height: 65%; /* Takes up most of the height */
+            max-width: 100%;
+            object-fit: cover; 
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .secret-message h3 { font-size: 1.2rem; color: #d81b60; margin: 0; }
+        .secret-message p { font-size: 1rem; color: #555; margin: 0; }
+        
+        #scratch-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
+        
+        /* --- DAY 4: TEDDY (UPGRADED BIG VERSION) --- */
+        
+        /* The container/stage */
+        .teddy-stage { 
+            position: relative;
+            width: 280px; 
+            height: 280px; 
+            background: radial-gradient(circle, #fff0f5 0%, #ffc1e3 100%); 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end; /* Sit at bottom */
+            box-shadow: 0 0 40px rgba(255, 192, 203, 0.4);
+            margin-bottom: 20px;
+            overflow: visible; /* Important so bubble can float outside */
+        }
+
+        /* 1. MAKE TEDDY BIGGER */
+        .teddy-bear { 
+            width: 150px; 
+            height: 200px; 
+            position: relative; 
+            margin-bottom: 20px; 
+            transition: transform 0.2s;
+            
+            /* Scale him up! */
+            transform: scale(2); 
+            transform-origin: bottom center; 
+        }
+
+        /* Bear Body Parts (Same as before) */
+        .teddy-bear .head {
+            width: 100px; height: 90px; 
+            background: #8d6e63; 
+            border-radius: 50%;
+            position: absolute; top: 20px; left: 25px; z-index: 2;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
+        }
+        .ears .ear { 
+            width: 30px; height: 30px; 
+            background: #8d6e63; 
+            border-radius: 50%; 
+            position: absolute; top: 15px; 
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
+        }
+        .ear.left { left: 20px; } .ear.right { right: 20px; }
+        .eyes .eye { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 35px; overflow: hidden; }
+        .eye.left { left: 25px; } .eye.right { right: 25px; }
+        .pupil { width: 6px; height: 6px; background: black; border-radius: 50%; position: absolute; top: 3px; left: 3px; }
+        .muzzle { width: 40px; height: 30px; background: #d7ccc8; border-radius: 50%; position: absolute; bottom: 10px; left: 30px; }
+        .nose { width: 12px; height: 8px; background: #3e2723; border-radius: 50%; margin: 5px auto; }
+        .body { 
+            width: 110px; height: 100px; 
+            background: #8d6e63; 
+            border-radius: 50%; 
+            position: absolute; bottom: 0; left: 20px; 
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Arms */
+        .arms .arm {
+            width: 35px; height: 70px; 
+            background: #8d6e63; 
+            border-radius: 20px;
+            position: absolute; top: 90px; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
+            z-index: 1; /* Default: Arms are in front of body */
+        }
+        .arm.left { left: 0; transform-origin: top right; }
+        .arm.right { right: 0; transform-origin: top left; }
+        
+        /* Shy Animation: Arms go BEHIND back */
+        .teddy-bear.shy .arm.left { 
+            /* Rotate arm UP and move it slightly right onto face */
+            transform: rotate(-140deg) translate(10px, -10px); 
+            z-index: 20; /* Ensure it sits ON TOP of the head */
+        }
+        
+        .teddy-bear.shy .arm.right { 
+            /* Rotate arm UP and move it slightly left onto face */
+            transform: rotate(140deg) translate(-10px, -10px); 
+            z-index: 20; /* Ensure it sits ON TOP of the head */
+        }
+        /* Royal Outfit Styles */
+        .turban {
+            width: 110px; height: 55px; 
+            background: linear-gradient(135deg, #d81b60, #ad1457); 
+            border-radius: 50% 50% 10px 10px;
+            position: absolute; top: -15px; left: 20px; z-index: 10;
+            border-bottom: 6px solid #ffd700; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .turban::after { content: '🪶'; position: absolute; top: -15px; left: 45%; font-size: 20px; }
+        .sherwani {
+            width: 115px; height: 110px;
+            background: #fdfdfd; 
+            border-radius: 50% 50% 40% 40%;
+            position: absolute; bottom: -5px; left: 18px; z-index: 5;
+            border: 3px solid #ffd700; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .sherwani::before { content: ''; position: absolute; left: 50%; top: 20px; width: 4px; height: 60px; background: #ffd700; transform: translateX(-50%); box-shadow: 0 0 5px gold; }
+        .sword {
+            position: absolute; bottom: 20px; left: -10px; width: 12px; height: 100px;
+            background: linear-gradient(to right, #e0e0e0, #ffffff, #b0b0b0); border-radius: 5px;
+            transform: rotate(-20deg); z-index: 15; border: 1px solid #999;
+        }
+        .sword::before { content: ''; position: absolute; bottom: 0; left: -10px; width: 32px; height: 15px; background: #ffd700; border-radius: 5px; }
+        .sword::after { content: ''; position: absolute; bottom: -10px; left: 2px; width: 8px; height: 15px; background: #8d6e63; border-radius: 50%; }
+        .belt {
+            position: absolute; bottom: 40px; left: 18px; width: 115px; height: 12px;
+            background: #b71c1c; z-index: 6; border-top: 2px solid #ffd700; border-bottom: 2px solid #ffd700;
+        }
+
+        /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER --- */
+        .thought-bubble {
+            position: absolute;
+            top: 0px;           /* High up near the ear */
+            right: -130px;        /* Pushed out to the side */
+            z-index: 10;
+            animation: floatDream 3s ease-in-out infinite;
+        }
+
+        /* The Photo Inside */
+        .thought-bubble img {
+            width: 180px;        
+            height: 100px;       
+            object-fit: cover;
+            border: 4px solid #fff;
+            border-radius: 20px; /* Rounded corners like a bubble */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            background: #fff;
+        }
+
+        /* --- 3. THE BUBBLE DOTS TRAIL --- */
+        .bubble-dot {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Dot positions creating a curve from head to bubble */
+        .dot-1 { width: 10px; height: 10px; bottom: -35px; left: -50px; opacity: 0.8; } /* Smallest, closest to head */
+        .dot-2 { width: 15px; height: 15px; bottom: -25px; left: -35px; opacity: 0.9; }
+        .dot-3 { width: 22px; height: 22px; bottom: -10px; left: -20px; }
+        .dot-4 { width: 30px; height: 30px; bottom: 10px; left: -10px; } /* Biggest, connects to photo */
+
+        /* Float Animation */
+        @keyframes floatDream {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        /* --- DAY 5: CONTRACT (PHOTO BACKGROUND - UPDATED SIZE & OPACITY) --- */
+        .contract-paper {
+            width: 95%; /* Wider on mobile */
+            max-width: 550px; /* Much BIGGER max size */
+            
+            /* 1. The Background Photo */
+            background-image: url('1767294746239(1)(1).jpg'); 
+            background-size: cover;
+            background-position: center;
+            
+            border-radius: 15px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            border: 3px solid #fff; /* Thicker border */
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease-out; /* Smooth opening pop */
+            transform: scale(0.9); /* Start slightly smaller for effect */
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* Add a pop effect when opening */
+        #promise-overlay[style*="display: flex"] .contract-paper {
+             transform: scale(1);
+        }
+
+        /* 2. The Less-Translucent "Glass" Box */
+        .contract-content {
+            /* CHANGED: 0.94 makes it mostly opaque, just a hint of the photo shows */
+            background: rgba(255, 253, 240, 0.4); 
+            
+            /* CHANGED: Higher blur makes text much more readable */
+            backdrop-filter: blur(3px); 
+            
+            margin: 15px;
+            padding: 25px; /* More padding */
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Make the text BOLD and darker for readability */
+        .contract-content ul li {
+            font-weight: 700; /* Bold text */
+            color: #1a0509;   /* Almost black/dark red for contrast */
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9); /* White glow behind text */
+            margin-bottom: 8px;
+        }
+        
+        .contract-content p {
+            font-weight: 700;
+            color: #1a0509;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+        }
+
+        #sig-canvas { border: 2px dashed #ccc; width: 100%; height: 80px; margin-top: 10px; cursor: crosshair; }
+        #stamp {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg) scale(0);
+            border: 5px solid #d81b60; color: #d81b60; font-size: 2rem; font-weight: bold;
+            padding: 10px; text-align: center; opacity: 0; pointer-events: none;
+            font-family: 'Courier New', monospace;
+        }
+        #stamp.stamped { animation: stampIn 0.3s forwards; }
+        @keyframes stampIn { to { transform: translate(-50%, -50%) rotate(-20deg) scale(1); opacity: 0.8; } }
+        
+        /* --- DAY 6: HUG (FIXED CENTER & LIFT) --- */
+        .hug-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 450px; 
+            height: 400px;    
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            margin-bottom: 20px;
+            overflow: visible; /* Important: Allows heart to fly out top */
+        }
+
+        .heart-center { 
+            font-size: 5rem; 
+            z-index: 100; 
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+            
+            /* ABSOLUTE CENTERING */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* This ensures it starts dead center */
+            transform: translate(-50%, -50%);
+            /* Smooth physics */
+            will-change: transform;
+        }
+
+        .arm-wrapper { 
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            z-index: 10; 
+            transition: left 0.1s linear, right 0.1s linear, opacity 0.3s;
+        }
+
+        .arm-wrapper img {
+            height: 300px; 
+            width: auto;   
+            max-width: 200px;
+            object-fit: contain; 
+            border-radius: 0 !important; 
+            border: none !important;     
+            background: transparent !important; 
+            box-shadow: none !important; 
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); 
+        }
+
+        .merged-photo {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0); 
+            width: 300px;  
+            height: auto;
+            max-height: 400px;
+            border: 5px solid #fff; 
+            border-radius: 15px; 
+            box-shadow: 0 0 50px rgba(255, 20, 147, 0.8); 
+            z-index: 20;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .merged-photo.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .left-arm { left: -40px; } 
+        .right-arm { right: -40px; }
+
+        .heart-center.squeezing {
+            animation: heartThrob 0.3s infinite alternate;
+        }
+
+        @keyframes heartThrob {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6)); }
+        }
+
+        /* --- DAY 7: KISS (CANVAS VERSION) --- */
+        #kiss-overlay {
+            /* Ensure overlay allows interaction */
+            touch-action: none; 
+        }
+
+        .kiss-canvas-container {
+            position: relative;
+            width: 320px;  /* Width of the photo card */
+            height: 500px; /* Height of the photo card */
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 5px solid white;
+            overflow: hidden;
+            
+            /* YOUR PHOTO BACKGROUND */
+            background-image: url('kissss.JPG'); /* Replace with your specific photo */
+            background-size: cover;
+            background-position: center;
+            
+            /* Custom Cursor from your reference */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="10" fill="%23FF1493" opacity="0.7"/></svg>') 16 16, auto;
+        }
+
+        #kiss-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .kiss-counter-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 20, 147, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            pointer-events: none; /* Let clicks pass through */
+            z-index: 10;
+        }
+
+        /* --- MANIFESTATION (EVIL EYE) --- */
+        .manifest-canvas-container {
+            position: relative;
+            width: 320px;
+            height: 500px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 5px solid white;
+            overflow: hidden;
+            
+            /* Background Photo */
+            background-image: url('final.JPG'); /* Your Couple Photo */
+            background-size: cover;
+            background-position: center;
+            
+            /* CUSTOM EVIL EYE CURSOR */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="font-size:30px;"><text y="30">🧿</text></svg>') 20 20, auto;
+        }
+
+        #manifest-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music1" loop>
+        <source src="heartbeat-02-225103.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="bg-music2" loop>
+        <source src="kiss-355162.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="bg-music3" loop>
+        <source src="https://pagalnew.com/128-downloads/11479" type="audio/mpeg">
+    </audio>
+
+    <div id="bg-hearts-container"></div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope" id="envelope" onclick="openEnvelope()">
+            <div class="flap"></div>
+            <div class="pocket"></div>
+            <div class="letter">
+                <h2>For Seju ❤️</h2>
+                <p>A little surprise for my favorite person...</p>
+            </div>
+            <div class="seal">❤️</div>
+        </div>
+    </div>
+
+    <div id="hook-container" class="hidden">
+        <h1>Hiii Seju ❤️</h1>
+        <div class="gif-container">
+            <img src="https://media.tenor.com/DurVWqW9hpAAAAAi/hola-gatito.gif" alt="Waving">
+        </div>
+        <p style="margin-bottom: 20px; font-size: 1.1rem; color: #666;">I have something for you...</p>
+        <button class="continue-btn" onclick="startJourney()">Open ❤️</button>
+    </div>
+
+    <div id="story-container" class="hidden">
+        <h1>Our Journey</h1>
+        
+        <div class="story-section">
+            <div class="story-title">Where it started 🏏</div>
+            <div class="gif-container">
+                <img src="https://media.tenor.com/5Kw-nREiee8AAAAi/tkthao219-bubududu.gif">
+            </div>
+            <p class="story-date">Our first date in Capital Mall ( Ind vs NZ Final )</p>
+            <p class="story-date">• 9th March 2025</p>
+            <div id="timer-met" class="live-timer">Calculating...</div>
+        </div>
+
+        <div class="story-section">
+            <div class="story-title">When we became US 💑</div>
+            <p class="story-date">Apna Roka on a full moon...</p>
+            <p class="story-date">• 13th April 2025</p>
+            <div id="timer-official" class="live-timer">Calculating...</div>
+        </div>
+
+        <p style="margin-top:15px; font-style:italic; color:#666;">And every moment since has been magic...</p>
+
+        <button class="continue-btn" onclick="showProposal()">Continue ❤️</button>
+    </div>
+
+    <div id="proposal-container" class="hidden">
+        <div class="gif-container">
+            <img id="main-gif" src="https://media.tenor.com/2csFlkJ3TyAAAAAi/tkthao219-bubududu.gif" alt="Asking">
+        </div>
+        <h1>Will you be my Valentine?</h1>
+        <p style="font-size:1.1rem; color:#666; margin-bottom:10px;">For my Seju ❤️</p>
+        
+        <div id="message-box" class="emotional-text"></div>
+
+        <div class="btn-group">
+            <button id="yes-btn" onclick="handleYes()">YES! ❤️</button>
+            <button id="no-btn" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <div id="celebration-container" class="hidden">
+        <div class="gif-container">
+            <img src="https://media1.tenor.com/m/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif" alt="Kissing">
+        </div>
+        <h1>YAY! I knew it! ❤️</h1>
+        <p style="font-size: 1.3rem; margin-top: 15px;">Get ready for a surprise...</p>
+    </div>
+
+    <div id="book-wrapper" class="hidden">
+        <div class="book">
+            
+            <div class="page" id="lock-page" style="z-index: 20;">
+                <div class="lock-overlay">
+                    <h2>Seju's Heart Lock</h2>
+                    <p>Enter the magic date to open</p>
+
+                    <div id="pin-display" style="font-size:1.6rem; letter-spacing:8px; margin:10px 0; color:#333;"> </div>
+
+                    <div class="numpad" style="display:grid; grid-template-columns: repeat(3, 70px); gap:10px; justify-content:center;">
+                        <button class="num" onclick="pressDigit('1')">1</button>
+                        <button class="num" onclick="pressDigit('2')">2</button>
+                        <button class="num" onclick="pressDigit('3')">3</button>
+                        <button class="num" onclick="pressDigit('4')">4</button>
+                        <button class="num" onclick="pressDigit('5')">5</button>
+                        <button class="num" onclick="pressDigit('6')">6</button>
+                        <button class="num" onclick="pressDigit('7')">7</button>
+                        <button class="num" onclick="pressDigit('8')">8</button>
+                        <button class="num" onclick="pressDigit('9')">9</button>
+                        <button class="num" onclick="backspace()">⌫</button>
+                        <button class="num" onclick="pressDigit('0')">0</button>
+                        <button class="num" onclick="clearPin()">C</button>
+                    </div>
+
+                    <div style="margin-top:12px; display:flex; gap:12px; justify-content:center;">
+                        <button class="next-btn" onclick="submitPin()">Enter</button>
+                    </div>
+
+                    <p style="margin-top:10px; font-size:14px; color:#444;">Hint: <strong>51ST DATE (DDMMYYYY)</strong></p>
+                    <p id="error-msg" style="color: red; font-size: 14px; margin-top: 10px;"></p>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 10;">
+                <div class="day-badge">Day 1: Rose Day 🌹</div>
+                <h2>My Beautiful Rose</h2>
+                <div class="gif-box"><img src="https://media.tenor.com/5hNFjHWQYKQAAAAi/bubu-dudu-sseeyall.gif"></div>
+                <p>To the flower that blooms in my heart forever.</p>
+                
+                <button class="plant-garden-btn" onclick="openGarden()">
+                    ✨ Click to Plant a Garden ✨
+                </button>
+
+                <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+            </div>
+
+            <div class="page" style="z-index: 9;">
+                <div class="day-badge">Day 2: Propose Day 💍</div>
+                <h2>The Golden Surprise</h2>
+                <div class="gif-box"><img src="https://media.tenor.com/N7GiO8UsfooAAAAi/bubu-dudu-heart.gif"></div>
+                <p>My heart, captured in gold, just for you.</p>
+                <button class="plant-garden-btn" onclick="openProposeMode()" style="background: linear-gradient(135deg, #ffd700, #ffecb3); color: #8a6e00; border-color: #eec900;">
+                    🎁 Open The Box
+                </button>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 8;">
+                <div class="day-badge">Day 3: Chocolate Day 🍫</div>
+                <h2>Hidden Sweetness</h2>
+                <div class="gif-box"><img src="https://media.tenor.com/JcPATwwdUOQAAAAi/bubu-dudu-sseeyall.gif"></div>
+                <p>Scratch the wrapper to find something sweeter than chocolate.</p>
+                <button class="plant-garden-btn" onclick="openChocolateMode()" style="background: linear-gradient(135deg, #5d4037, #8d6e63); color: #fff; border-color: #4e342e;">
+                    🍫 Unwrap Me
+                </button>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 7;">
+                <div class="day-badge">Day 4: Teddy Day 🧸</div>
+                <h2>Your Cuddle Buddy</h2>
+                <div class="gif-box"><img src="https://media.tenor.com/Ck2Rk9PDIQIAAAAi/baby-bubu-bubu-dudu.gif"></div>
+                <p>He is shy, but he loves you. Say hi?</p>
+                <button class="plant-garden-btn" onclick="openTeddyMode()" style="background: linear-gradient(135deg, #d7ccc8, #a1887f); color: #3e2723;">
+                    🧸 Meet Teddy
+                </button>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 6;">
+                <div class="day-badge">Day 5: Promise Day 🤝</div>
+                <h2>The Vows</h2>
+                <div class="gif-box"><img src="https://media.tenor.com/9PTYErxTTkAAAAAi/bubu-dudu-bubu.gif"></div>
+                <p>Before the pheras, let's sign a little love contract.</p>
+                <button class="plant-garden-btn" onclick="openPromiseMode()" style="background: linear-gradient(135deg, #fff9c4, #fff176); color: #f57f17;">
+                    📜 Sign Contract
+                </button>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 5;">
+                <div class="day-badge">Day 6: Hug Day 🫂</div>
+                <h2>Hug Meter</h2>
+                <div class="gif-box"><img src="https://media.tenor.com/0BlLAI6vIhoAAAAi/tkthao219-bubududu.gif"></div>
+                <p style="font-size:0.9rem;">
+
+                    Get angry and I will be your firebrigade 🚒<br>
+                    But I'll never let you stay angry for long.<br>
+                    <strong>Let's hug it out!</strong>
+
+                </p>
+                <button class="plant-garden-btn" onclick="openHugMode()" style="background: linear-gradient(135deg, #ff8a80, #ff5252); color: white;">
+                    🤗 Send a Hug
+                </button>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 4;">
+                <div class="day-badge">Day 7: Kiss Day 💋</div>
+                <h2>Sealed with a Kiss</h2>
+                <div class="gif-box"><img src="https://media1.tenor.com/m/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif"></div>
+                <p>Fill the screen with kisses for me?</p>
+                <button class="plant-garden-btn" onclick="openKissMode()" style="background: linear-gradient(135deg, #f06292, #e91e63); color: white;">
+                    💋 Start Kissing
+                </button>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 3;">
+                <div class="day-badge" style="background:#d81b60; color:white; box-shadow:0 4px 10px rgba(216, 27, 96, 0.4);">
+                    The Big Day 👰🤵
+                </div>
+                <h2>Wedding Countdown</h2>
+                
+                <div class="gif-box">
+                    <img src="https://media.tenor.com/2csFlkJ3TyAAAAAi/tkthao219-bubududu.gif" style="border:none; box-shadow:none;">
+                </div>
+                
+                <p>Can't wait to make you mine forever.</p>
+
+                <div id="countdown-mini" style="transform: scale(1.3); margin: 20px 0; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <span id="days">00</span>d <span id="hours">00</span>h <span id="minutes">00</span>m
+                </div>
+
+                <p style="font-size: 0.9rem; margin-top: 5px; color:#d81b60; font-weight:bold;">February 21, 2026</p>
+
+                <button class="plant-garden-btn" onclick="openManifestMode()" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); margin-top: 20px; box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);">
+                    🧿 Manifestation
+                </button>
+
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="garden-wrapper">
+        <canvas id="garden-canvas"></canvas>
+        <div class="garden-ui">
+            <button class="back-to-book-btn" onclick="closeGarden()">📖 Back to Book</button>
+            <div class="garden-header">
+                <h1 class="garden-title">🌸 Our Garden</h1>
+            </div>
+            <div class="garden-hint">
+                <span class="text-line" style="font-size:1.5rem; display:block;">Click Anywhere to</span>
+                <span class="text-highlight" style="font-family:'Great Vibes'; font-size:3rem; color:#d81b60;">Plant Love</span>
+            </div>
+            <div class="garden-controls">
+                <button class="garden-btn" id="cleanBtn">
+                    <span>🧹</span> Clear
+                </button>
+                <button class="garden-btn" id="autoBtn">
+                    <span>✨</span> Auto Bloom
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="propose-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('propose-overlay')">✖</button>
+        
+        <div id="box-container">
+            <div class="jewelry-box">
+                <div class="lid">
+                    <div class="lid-interior"></div> 
+                </div>
+                
+                <div class="box-base">
+                    <div id="ring-wrapper">
+                        <img src="225A9789.JPG" class="pop-up-photo" alt="Us">
+                        
+                        <div id="ring-canvas-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="instruction-text" style="margin-top: 50px;">Hold down to Open ❤️</p>
+    </div>
+    
+    <div id="chocolate-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('chocolate-overlay')">✖</button>
+        <div class="scratch-container">
+            <div class="secret-message">
+                <h3>You are sweeter than...</h3>
+                <img src="225A0327.JPG" alt="Us">
+                <p>...all the chocolates in the world! 🍫❤️</p>
+            </div>
+            <canvas id="scratch-canvas"></canvas>
+        </div>
+        <p class="instruction-text">Scratch the wrapper! ✨</p>
+    </div>
+
+    <div id="teddy-overlay" class="hidden-overlay">
+    <button class="close-overlay" onclick="closeOverlay('teddy-overlay')">✖</button>
+    <div class="teddy-stage">
+        <div class="teddy-bear" id="interactive-teddy">
+            <div class="turban hidden"></div> 
+            <div class="sherwani hidden"></div>
+            <div class="belt hidden"></div>
+            <div class="sword hidden"></div>
+
+            <div class="ears">
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+            </div>
+            <div class="head">
+                <div class="eyes">
+                    <div class="eye left"><div class="pupil"></div></div>
+                    <div class="eye right"><div class="pupil"></div></div>
+                </div>
+                <div class="muzzle">
+                    <div class="nose"></div>
+                </div>
+            </div>
+            <div class="body"></div>
+            <div class="arms">
+                <div class="arm left"></div>
+                <div class="arm right"></div>
+            </div>
+        </div>
+
+        <div class="thought-bubble">
+            <div class="bubble-dot dot-1"></div>
+            <div class="bubble-dot dot-2"></div>
+            <div class="bubble-dot dot-3"></div>
+            <div class="bubble-dot dot-4"></div>
+            <img src="Image_1770362948844.jpg" alt="Dreaming of Us">
+        </div>
+    </div>
+    <div class="controls">
+        <button class="action-btn" onclick="dressTeddy()">👑 Royal Maharaja Mode</button>
+    </div>
+    <p class="instruction-text">A King for his Queen Seju ❤️</p>
+    </div>
+    
+    <div id="promise-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('promise-overlay')">✖</button>
+        
+        <div class="contract-paper">
+            <div class="contract-content">
+                
+                <h2 style="color: #d81b60; font-family: 'Great Vibes'; font-size: 2.8rem; margin-bottom: 10px; text-align:center; text-shadow: 2px 2px 0px rgba(255,255,255,0.8);">❤️ The Love Contract ❤️</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 15px; text-align: center;">I, the beautiful and amazing <strong>Seju</strong>, hereby solemnly promise to:</p>
+                
+                <ul style="text-align:left; padding-left:20px; font-size:1rem; line-height:1.7; color: #444;">
+                    <li>Always share my chocolates (even the last piece... maybe). 🍫</li>
+                    <li>Admit that Viku is *sometimes* right. 😉</li>
+                    <li>Not get too "hangry" (hungry + angry) before dinner dates. 🍕</li>
+                    <li>Laugh at his jokes, even the really bad "dad jokes." 😂</li>
+                    <li>Hug Viku when he is sad (or just annoying). 🫂</li>
+                    <li>Let him win an argument at least once. 😎</li>
+                    <li>Love you forever & always (the easiest promise). ❤️</li>
+                </ul>
+
+                <div class="signature-area" style="margin-top: 20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <p style="margin:0; font-weight:bold; color:#d81b60;">Sign Here, Wifey:</p>
+                        <button onclick="clearSignature()" style="background:#ffebee; border:1px solid #ffcdd2; color:#d81b60; border-radius:15px; padding:6px 12px; font-size:0.8rem; cursor:pointer; font-weight:bold;">
+                            ❌ Retry
+                        </button>
+                    </div>
+                    <canvas id="sig-canvas" style="background: rgba(255,255,255,0.7); border: 2px dashed #d81b60; border-radius: 8px;"></canvas>
+                </div>
+                <button class="action-btn" onclick="submitContract()" style="font-size: 1.2rem; padding: 12px 30px; margin-top: 20px; width: 100%;">✍️ Seal the Deal FOR LIFE</button>
+
+            </div>
+        </div>
+        
+        <div id="stamp" class="hidden" style="font-family: 'Courier New'; border: 6px double #d81b60; padding: 15px; font-size: 2.5rem; transform: translate(-50%, -50%) rotate(-15deg) scale(0); color: #d81b60; text-shadow: 2px 2px 0px rgba(255,200,200,0.5);">OFFICIALLY<br>YOURS!</div>
+    </div>
+    
+    <div id="hug-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('hug-overlay')">✖</button>
+        
+        <div class="hug-container">
+            <div class="arm-wrapper left-arm">
+                <img src="l.png" alt="Vikas"> 
+            </div>
+
+            <div class="heart-center">❤️</div>
+
+            <div class="arm-wrapper right-arm">
+                <img src="r.png" alt="Seju"> 
+            </div>
+
+            <img src="hug.png" class="merged-photo" id="final-hug-pic" alt="Us Together">
+        </div>
+
+        <button id="hug-btn" class="action-btn" style="z-index:100; font-size:1.5rem;">HOLD FOR HUG 🫂</button>
+    </div>
+
+    <div id="kiss-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('kiss-overlay')">✖</button>
+        
+        <div class="kiss-canvas-container">
+            <div class="kiss-counter-badge" id="kiss-count-badge">Kisses: 0</div>
+            <canvas id="kiss-canvas"></canvas>
+        </div>
+        
+        <p class="instruction-text">Tap to fill the photo with kisses! 💋</p>
+    </div>
+
+    <div id="manifest-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('manifest-overlay')">✖</button>
+        
+        <div class="manifest-canvas-container">
+            <canvas id="manifest-canvas"></canvas>
+        </div>
+        
+        <p class="instruction-text">Press anywhere to save us from Nazar! 🧿</p>
+    </div>
+
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        #define PI 3.14159265359
+
+        uniform float u_ratio;
+        uniform vec2 u_cursor;
+        uniform float u_stop_time;
+        uniform float u_clean;
+        uniform vec2 u_stop_randomizer;
+        uniform float u_theme;
+
+        uniform sampler2D u_texture;
+        varying vec2 vUv;
+
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+        float snoise(vec2 v) {
+            const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+            vec2 i = floor(v + dot(v, C.yy));
+            vec2 x0 = v - i + dot(i, C.xx);
+            vec2 i1;
+            i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+            vec4 x12 = x0.xyxy + C.xxzz;
+            x12.xy -= i1;
+            i = mod289(i);
+            vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+            vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+            m = m*m;
+            m = m*m;
+            vec3 x = 2.0 * fract(p * C.www) - 1.0;
+            vec3 h = abs(x) - 0.5;
+            vec3 ox = floor(x + 0.5);
+            vec3 a0 = x - ox;
+            m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+            vec3 g;
+            g.x = a0.x * x0.x + h.x * x0.y;
+            g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+            return 130.0 * dot(m, g);
+        }
+
+        float get_flower_shape(vec2 _p, float _pet_n, float _angle, float _outline) {
+            _angle *= 3.;
+            _p = vec2(_p.x * cos(_angle) - _p.y * sin(_angle), _p.x * sin(_angle) + _p.y * cos(_angle));
+            float a = atan(_p.y, _p.x);
+            float petal_variation = 0.15 * sin(a * _pet_n * 2.0);
+            float flower_sectoral_shape = pow(abs(sin(a * _pet_n)), .35) + .2 + petal_variation;
+            vec2 flower_size_range = vec2(.04, .12);
+            float size = flower_size_range[0] + u_stop_randomizer[0] * flower_size_range[1];
+            float flower_radial_shape = pow(length(_p) / size, 1.8);
+            flower_radial_shape -= .12 * sin(8. * a + u_stop_randomizer[1] * 6.28);
+            flower_radial_shape = max(.08, flower_radial_shape);
+            flower_radial_shape += smoothstep(0., 0.025, -_p.y + .18 * abs(_p.x));
+            float grow_time = step(.25, u_stop_time) * pow(u_stop_time, .25);
+            float flower_shape = 1. - smoothstep(0., flower_sectoral_shape, _outline * flower_radial_shape / grow_time);
+            flower_shape *= (1. - step(1., grow_time));
+            return flower_shape;
+        }
+
+        float get_stem_shape(vec2 _p, vec2 _uv, float _w, float _angle) {
+            _w = max(.003, _w);
+            float x_offset = _p.y * sin(_angle);
+            x_offset *= pow(3. * _uv.y, 2.);
+            _p.x -= x_offset;
+            float noise_power = .4;
+            float cursor_horizontal_noise = noise_power * snoise(2.5 * _uv * u_stop_randomizer[0]);
+            cursor_horizontal_noise *= pow(dot(_p.y, _p.y), .5);
+            cursor_horizontal_noise *= pow(dot(_uv.y, _uv.y), .25);
+            _p.x += cursor_horizontal_noise;
+            float left = smoothstep(-_w, 0., _p.x);
+            float right = 1. - smoothstep(0., _w, _p.x);
+            float stem_shape = left * right;
+            float grow_time = 1. - smoothstep(0., .18, u_stop_time);
+            float stem_top_mask = smoothstep(0., pow(grow_time, .45), .035 -_p.y);
+            stem_shape *= stem_top_mask;
+            stem_shape *= (1. - step(.17, u_stop_time));
+            return stem_shape;
+        }
+
+        float get_leaf_shape(vec2 p, float angle, float size) {
+            float a = atan(p.y, p.x) + angle;
+            float r = length(p);
+            float serration = sin(a * 15.0) * 0.1;
+            float leaf_curve = sin(a * 2.0 + serration) * 0.5 + 0.5;
+            float taper = smoothstep(size, 0.0, r);
+            taper *= smoothstep(0.0, size * 0.2, r);
+            float leaf = leaf_curve * taper;
+            leaf *= step(0.0, sin(a));
+            leaf += snoise(p * 20.0) * 0.1 * leaf;
+            return max(0.0, leaf) * 0.8;
+        }
+
+        void main() {
+            // UPDATED: Use vec4 to track Transparency (Alpha)
+            vec4 base = texture2D(u_texture, vUv); 
+            vec2 uv = vUv;
+            uv.x *= u_ratio;
+            vec2 cursor = vUv - u_cursor.xy;
+            cursor.x *= u_ratio;
+            
+            vec3 stem_color = vec3(.15 + u_stop_randomizer[0] * .4, .65, .25);
+            
+            float color_type = floor(u_stop_randomizer[1] * 4.0);
+            vec3 flower_color;
+            if (color_type < 1.0) flower_color = vec3(.85, .15, .25); 
+            else if (color_type < 2.0) flower_color = vec3(.95, .45, .55); 
+            else if (color_type < 3.0) flower_color = vec3(.95, .75, .2); 
+            else flower_color = vec3(.7, .4, .85); 
+            
+            flower_color += vec3(u_stop_randomizer[0] * 0.1 - 0.05);
+
+            float angle = .5 * (u_stop_randomizer[0] - .5);
+            float stem_shape = get_stem_shape(cursor, uv, .004, angle);
+            stem_shape += get_stem_shape(cursor + vec2(0., .22 + .4 * u_stop_randomizer[0]), uv, .003, angle);
+            float stem_mask = 1. - get_stem_shape(cursor, uv, .005, angle);
+            stem_mask -= get_stem_shape(cursor + vec2(0., .22 + .4 * u_stop_randomizer[0]), uv, .004, angle);
+
+            float leaf1 = get_leaf_shape(cursor + vec2(0.02, 0.08), angle + 0.5, 0.02);
+            float leaf2 = get_leaf_shape(cursor + vec2(-0.02, 0.12), angle - 0.5, 0.015);
+            stem_shape += leaf1 + leaf2;
+
+            float petals_back_number = 2. + floor(u_stop_randomizer[0] * 3.);
+            float angle_offset = -(2. * step(0., angle) - 1.) * .08 * u_stop_time;
+            float flower_back_shape = get_flower_shape(cursor, petals_back_number, angle + angle_offset, 1.4);
+            float flower_back_mask = 1. - get_flower_shape(cursor, petals_back_number, angle + angle_offset, 1.5);
+
+            float petals_front_number = 3. + floor(u_stop_randomizer[1] * 3.);
+            float flower_front_shape = get_flower_shape(cursor, petals_front_number, angle, 1.);
+            float flower_front_mask = 1. - get_flower_shape(cursor, petals_front_number, angle, .92);
+
+            vec3 color = base.rgb; // Use RGB from base
+            color *= stem_mask;
+            color *= flower_back_mask;
+            color *= flower_front_mask;
+            color += (stem_shape * stem_color);
+
+            vec3 flower_back_color = flower_color * 0.7;
+            color += (flower_back_shape * flower_back_color);
+            color += (flower_front_shape * flower_color);
+
+            float center_dist = length(cursor) * 15.0;
+            float center_highlight = smoothstep(1.5, 0.0, center_dist) * flower_front_shape;
+            color += vec3(1.0, 0.95, 0.7) * center_highlight * 0.4 * step(0.3, u_stop_time);
+
+            color.rgb *= 1.0 - (0.3 * flower_back_shape * flower_front_shape);
+            
+            // --- NEW ALPHA LOGIC ---
+            // Calculate total "intensity" of the new flower being drawn
+            float intensity = stem_shape + flower_back_shape + flower_front_shape;
+            
+            // Add new intensity to existing alpha
+            float alpha = clamp(base.a + intensity, 0.0, 1.0);
+            
+            // Handle the clear button (u_clean)
+            color *= u_clean;
+            alpha *= u_clean;
+
+            // Output the color with the calculated alpha
+            gl_FragColor = vec4(color, alpha);
+        }
+    </script>
+
+    <script type="x-shader/x-vertex" id="vertexShader">
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = vec4(position, 1.);
+        }
+    </script>
+
+    <script>
+        // --- 1. EXISTING BOOK LOGIC ---
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            const wrapper = document.getElementById('envelope-wrapper');
+            const hook = document.getElementById('hook-container');
+            envelope.classList.add('open');
+            setTimeout(() => {
+                wrapper.style.opacity = '0';
+                hook.classList.remove('hidden');
+                hook.classList.add('fade-in');
+                setTimeout(() => { wrapper.style.display = 'none'; }, 1000);
+            }, 2000);
+        }
+
+        function startJourney() {
+            const hook = document.getElementById('hook-container');
+            const story = document.getElementById('story-container');
+            hook.style.opacity = '0';
+            setTimeout(() => {
+                hook.style.display = 'none';
+                story.classList.remove('hidden');
+                story.classList.add('fade-in');
+            }, 500);
+        }
+
+        function showProposal() {
+            const story = document.getElementById('story-container');
+            const proposal = document.getElementById('proposal-container');
+            story.style.opacity = '0';
+            setTimeout(() => {
+                story.style.display = 'none';
+                proposal.classList.remove('hidden');
+                proposal.classList.add('fade-in');
+            }, 500);
+        }
+
+        function updateLoveTimers() {
+            const now = new Date().getTime();
+            const metDate = new Date("March 9, 2025 00:00:00").getTime();
+            const diffMet = now - metDate;
+            const offDate = new Date("April 13, 2025 00:00:00").getTime();
+            const diffOff = now - offDate;
+
+            function formatTime(ms) {
+                const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+                return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+
+            if (document.getElementById('timer-met')) document.getElementById('timer-met').innerText = formatTime(diffMet);
+            if (document.getElementById('timer-official')) document.getElementById('timer-official').innerText = formatTime(diffOff);
+        }
+        setInterval(updateLoveTimers, 1000);
+        updateLoveTimers();
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 5 + 's';
+            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+        }
+        setInterval(createHeart, 500);
+
+        const noTexts = ["Are you sure? 🥺", "Seju please...", "Don't do this to me! 😭", "I'm gonna cry...", "You're breaking my heart! 💔", "Just say YES! ❤️"];
+        const sadGifs = [
+            "https://media.tenor.com/rwZ1KmV8ZAoAAAAi/bubu-dudu-sseeyall.gif",
+            "https://media.tenor.com/lSgJHaor3IAAAAAi/bubu-onetwo.gif",
+            "https://media.tenor.com/HUJyzO0WfM4AAAAi/bubu-dudu.gif"
+        ];
+        let clickCount = 0;
+
+        function handleNo() {
+            const audio1 = document.getElementById("bg-music1");
+            audio1.volume = 0.5; 
+            if (audio1.paused) { audio1.loop = true; audio1.play().catch(error => console.log("Audio play failed: ", error)); }
+
+            clickCount++;
+            const msgBox = document.getElementById('message-box');
+            msgBox.innerHTML = noTexts[Math.min(clickCount - 1, noTexts.length - 1)];
+
+            const mainGif = document.getElementById('main-gif');
+            const index = (clickCount - 1) % sadGifs.length;
+            mainGif.style.display = '';
+            mainGif.src = sadGifs[index];
+
+            const yesBtn = document.getElementById('yes-btn');
+            let scale = 1 + (clickCount * 0.2);
+            yesBtn.style.transform = `scale(${scale})`;
+        }
+
+        function handleYes() {
+            const audio1 = document.getElementById("bg-music1");
+            if (audio1 && !audio1.paused) { audio1.pause(); audio1.currentTime = 0; }
+            const audio2 = document.getElementById("bg-music2");
+            if (audio2) { audio2.volume = 0.5; audio2.loop = true; audio2.play().catch(error => console.log("Audio2 play failed: ", error)); }
+
+            document.getElementById('proposal-container').style.display = 'none';
+            const celebration = document.getElementById('celebration-container');
+            celebration.classList.remove('hidden');
+            celebration.classList.add('fade-in');
+
+            var duration = 10 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+
+            setTimeout(() => {
+                celebration.style.opacity = '0';
+                setTimeout(() => {
+                        celebration.style.display = 'none';
+                        const bookWrapper = document.getElementById('book-wrapper');
+                        bookWrapper.classList.remove('hidden'); 
+                        bookWrapper.style.display = 'flex';      
+                        bookWrapper.classList.add('fade-in');
+                        
+                        const audio3 = document.getElementById('bg-music3');
+                        if (audio2 && !audio2.paused) { audio2.pause(); audio2.currentTime = 0; }
+                        if (audio3) { audio3.volume = 0.5; audio3.loop = true; audio3.play().catch(err => console.log(err)); }
+                }, 1000);
+            }, 6000);
+        }
+
+        let enteredPin = '';
+        function updatePinDisplay() { document.getElementById('pin-display').innerText = enteredPin.replace(/./g, '•'); }
+        function pressDigit(d) { if (enteredPin.length >= 8) return; enteredPin += d; updatePinDisplay(); }
+        function backspace() { enteredPin = enteredPin.slice(0, -1); updatePinDisplay(); }
+        function clearPin() { enteredPin = ''; updatePinDisplay(); }
+        function submitPin() { checkPassword(); }
+        
+        function checkPassword() {
+            const digits = enteredPin.replace(/\D/g, '');
+            if (digits === '21022026') {
+                const lockPage = document.getElementById('lock-page');
+                flipPage(lockPage.querySelector('.next-btn') || lockPage); 
+                document.getElementById('error-msg').innerText = '';
+            } else {
+                const err = document.getElementById('error-msg');
+                err.innerText = "Wrong password! Hint: 51ST DATE";
+                const lockDiv = document.querySelector('.lock-overlay');
+                lockDiv.classList.remove('shake');
+                void lockDiv.offsetWidth; 
+                lockDiv.classList.add('shake');
+            }
+        }
+
+        function flipPage(el) {
+            const page = el.closest ? el.closest('.page') : el;
+            if (!page.dataset.orig) page.dataset.orig = page.innerHTML;
+            page.innerHTML = '<div class="blank-back" style="width:100%; height:100%;"></div>';
+            page.classList.add('flipped');
+        }
+
+        function prevPage(btn) {
+            const flipped = document.querySelectorAll('.page.flipped');
+            if (!flipped || flipped.length === 0) return;
+            const last = flipped[flipped.length - 1];
+            if (last.dataset.orig) { last.innerHTML = last.dataset.orig; delete last.dataset.orig; }
+            last.classList.remove('flipped');
+        }
+
+        function updateCountdown() {
+            const weddingDate = new Date("February 21, 2026 13:00:00").getTime();
+            const now = new Date().getTime();
+            const gap = weddingDate - now;
+            if (gap > 0) {
+                const days = Math.floor(gap / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
+                if(document.getElementById("days")) document.getElementById("days").innerText = days;
+                if(document.getElementById("hours")) document.getElementById("hours").innerText = hours;
+                if(document.getElementById("minutes")) document.getElementById("minutes").innerText = minutes;
+            } else {
+                if(document.getElementById("countdown-mini")) document.getElementById("countdown-mini").innerHTML = "<h3>It's Wedding Day! ❤️</h3>";
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); 
+
+        // --- 2. FLOWER GARDEN INTEGRATION ---
+        
+        let gardenInitialized = false;
+        let gardenRunning = false;
+        let renderer, sceneShader, sceneBasic, camera, clock;
+        let shaderMaterial, basicMaterial;
+        let renderTargets = [];
+        let isAutoBloom = false;
+        let autoBloomInterval = null;
+        let pointer = { x: 0.5, y: 0.5, clicked: false, vanishCanvas: false };
+
+        function openGarden() {
+            document.getElementById('book-wrapper').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('book-wrapper').style.display = 'none';
+                const garden = document.getElementById('garden-wrapper');
+                garden.style.display = 'block';
+                setTimeout(() => garden.style.opacity = '1', 50);
+                
+                if (!gardenInitialized) initGarden();
+                gardenRunning = true;
+                renderGarden();
+                // Plant one flower immediately as a demo
+                setTimeout(() => { pointer.clicked = true; pointer.x = 0.5; pointer.y = 0.5; }, 500);
+            }, 500);
+        }
+
+        function closeGarden() {
+            const garden = document.getElementById('garden-wrapper');
+            garden.style.opacity = '0';
+            setTimeout(() => {
+                garden.style.display = 'none';
+                const book = document.getElementById('book-wrapper');
+                book.style.display = 'flex';
+                setTimeout(() => book.style.opacity = '1', 50);
+                gardenRunning = false;
+            }, 1000);
+        }
+
+        function initGarden() {
+            const canvasEl = document.querySelector('#garden-canvas');
+            const cleanBtn = document.querySelector('#cleanBtn');
+            const autoBtn = document.querySelector('#autoBtn');
+            const hintEl = document.querySelector('.garden-hint');
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvasEl, alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            
+            sceneShader = new THREE.Scene();
+            sceneBasic = new THREE.Scene();
+            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10);
+            clock = new THREE.Clock();
+
+            renderTargets = [
+                new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight),
+                new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight),
+            ];
+
+            createPlane();
+            updateSize();
+
+            window.addEventListener('resize', () => { updateSize(); cleanCanvas(); });
+
+            // Interaction
+            let isTouch = false;
+            const handleInput = (x, y) => {
+                pointer.x = x; pointer.y = y; pointer.clicked = true;
+                if(hintEl) hintEl.classList.add('fade-out');
+            };
+
+            canvasEl.addEventListener('click', e => handleInput(e.pageX / window.innerWidth, e.pageY / window.innerHeight));
+            canvasEl.addEventListener('touchstart', e => {
+                isTouch = true;
+                handleInput(e.targetTouches[0].pageX / window.innerWidth, e.targetTouches[0].pageY / window.innerHeight);
+            }, { passive: false });
+
+            cleanBtn.addEventListener('click', cleanCanvas);
+            autoBtn.addEventListener('click', () => {
+                isAutoBloom = !isAutoBloom;
+                autoBtn.classList.toggle('active');
+                if (isAutoBloom) {
+                    plantRandomFlower();
+                    if(hintEl) hintEl.classList.add('fade-out');
+                    autoBloomInterval = setInterval(plantRandomFlower, 300);
+                } else {
+                    if (autoBloomInterval) clearInterval(autoBloomInterval);
+                }
+            });
+
+            gardenInitialized = true;
+        }
+
+        function createPlane() {
+            shaderMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    u_stop_time: { type: 'f', value: 0 },
+                    u_stop_randomizer: { type: 'v2', value: new THREE.Vector2(Math.random(), Math.random()) },
+                    u_cursor: { type: 'v2', value: new THREE.Vector2(pointer.x, pointer.y) },
+                    u_ratio: { type: 'f', value: window.innerWidth / window.innerHeight },
+                    u_texture: { type: 't', value: null },
+                    u_clean: { type: 'f', value: 1 },
+                },
+                vertexShader: document.getElementById('vertexShader').textContent,
+                fragmentShader: document.getElementById('fragmentShader').textContent,
+                transparent: true
+            });
+            basicMaterial = new THREE.MeshBasicMaterial();
+            const planeGeometry = new THREE.PlaneGeometry(2, 2);
+            sceneBasic.add(new THREE.Mesh(planeGeometry, basicMaterial));
+            sceneShader.add(new THREE.Mesh(planeGeometry, shaderMaterial));
+        }
+
+        function updateSize() {
+            if(!renderer) return;
+            shaderMaterial.uniforms.u_ratio.value = window.innerWidth / window.innerHeight;
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderTargets[0].setSize(window.innerWidth, window.innerHeight);
+            renderTargets[1].setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function cleanCanvas(e) {
+            // 1. Stop the click from passing through to the canvas underneath
+            if(e && e.stopPropagation) e.stopPropagation();
+
+            // 2. Make the canvas transparent (Clear it)
+            pointer.vanishCanvas = true;
+
+            // 3. Move the "brush" far off-screen so the lingering flower disappears
+            pointer.x = -100; 
+            pointer.y = -100;
+            pointer.clicked = true; // Force the shader to update to this new off-screen position
+
+            // 4. Bring the canvas opacity back (ready for new flowers)
+            setTimeout(() => { pointer.vanishCanvas = false; }, 50);
+        }
+
+        function plantRandomFlower() {
+            pointer.x = Math.random();
+            pointer.y = Math.random();
+            pointer.clicked = true;
+        }
+
+        function renderGarden() {
+            if (!gardenRunning) return;
+
+            shaderMaterial.uniforms.u_clean.value = pointer.vanishCanvas ? 0 : 1;
+            shaderMaterial.uniforms.u_texture.value = renderTargets[0].texture;
+
+            if (pointer.clicked) {
+                shaderMaterial.uniforms.u_cursor.value = new THREE.Vector2(pointer.x, 1 - pointer.y);
+                shaderMaterial.uniforms.u_stop_randomizer.value = new THREE.Vector2(Math.random(), Math.random());
+                shaderMaterial.uniforms.u_stop_time.value = 0;
+                pointer.clicked = false;
+            }
+            shaderMaterial.uniforms.u_stop_time.value += clock.getDelta();
+
+            renderer.setRenderTarget(renderTargets[1]);
+            renderer.render(sceneShader, camera);
+            basicMaterial.map = renderTargets[1].texture;
+            renderer.setRenderTarget(null);
+            renderer.render(sceneBasic, camera);
+
+            let tmp = renderTargets[0];
+            renderTargets[0] = renderTargets[1];
+            renderTargets[1] = tmp;
+
+            requestAnimationFrame(renderGarden);
+        }
+
+        // --- OVERLAY UTILITIES ---
+        function openOverlay(id) {
+            const overlay = document.getElementById(id);
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.style.opacity = '1', 50);
+        }
+        function closeOverlay(id) {
+            const overlay = document.getElementById(id);
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.display = 'none', 500);
+        }
+        
+// --- DAY 2: PROPOSE (RING) ---
+        let ringRenderer, ringScene, ringCamera, ringMesh;
+        
+        function openProposeMode() {
+            openOverlay('propose-overlay');
+            initRing();
+            
+            const box = document.getElementById('box-container');
+            const jewelryBox = document.querySelector('.jewelry-box');
+            const lid = document.querySelector('.lid');
+            const instruction = document.querySelector('#propose-overlay .instruction-text');
+            
+            // Reset state if reopened
+            lid.classList.remove('open');
+            jewelryBox.classList.remove('popped');
+            instruction.innerText = "Hold down to Open ❤️";
+            instruction.style.opacity = '1';
+            instruction.style.color = 'white'; // Reset color
+
+            const startOpen = () => {
+                // 1. Open the Lid
+                lid.classList.add('open');
+                
+                // 2. Wait 0.5 seconds, then POP the ring up & Change Text
+                setTimeout(() => {
+                    jewelryBox.classList.add('popped');
+                    
+                    // Fade out old text
+                    instruction.style.opacity = '0'; 
+                    
+                    // Switch text and fade in
+                    setTimeout(() => {
+                        instruction.innerHTML = "Diamond ring for my GEM 💎";
+                        instruction.style.fontSize = '1.5rem';
+                        instruction.style.fontWeight = 'bold';
+                        instruction.style.color = '#ffd700'; // Gold Color
+                        instruction.style.textShadow = '0 2px 10px rgba(0,0,0,0.8)';
+                        instruction.style.opacity = '1'; 
+                    }, 300);
+                }, 400);
+                
+                // 3. Fire SHINY confetti ON TOP of the overlay
+                setTimeout(() => {
+                    // Burst 1: Gold Stars
+                    confetti({
+                        particleCount: 50,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#FFD700', '#FFA500'], 
+                        shapes: ['star'],
+                        scalar: 1.2,
+                        zIndex: 999 // <--- THE FIX: Puts confetti on top of overlay
+                    });
+                    
+                    // Burst 2: Sparkles
+                    confetti({
+                        particleCount: 60,
+                        spread: 100,
+                        origin: { y: 0.6 },
+                        colors: ['#FFFFFF', '#E5E4E2'], 
+                        shapes: ['circle'],
+                        scalar: 0.8,
+                        drift: 0.5,
+                        zIndex: 999 // <--- THE FIX
+                    });
+                }, 800);
+            };
+
+            box.addEventListener('mousedown', startOpen);
+            box.addEventListener('touchstart', (e) => { e.preventDefault(); startOpen(); });
+        }
+
+        function initRing() {
+            if(ringRenderer) return; // Already init
+            const container = document.getElementById('ring-canvas-container');
+            
+            ringScene = new THREE.Scene();
+            ringCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+            ringCamera.position.z = 5;
+
+            // Important: Alpha true allows transparent background so it blends with the box
+            ringRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            ringRenderer.setSize(160, 160);
+            container.appendChild(ringRenderer.domElement);
+
+            // Gold Material (Shiny)
+            const goldMat = new THREE.MeshStandardMaterial({ 
+                color: 0xffd700, 
+                metalness: 1.0, 
+                roughness: 0.2,
+                emissive: 0x443300 // Slight self-glow
+            });
+            
+            // Diamond Material (Sparkly)
+            const diamondMat = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                metalness: 0.1,
+                roughness: 0.0,
+                transmission: 0.95, // Glass-like
+                thickness: 2.0,
+                ior: 2.4, // Diamond refractive index
+                clearcoat: 1.0
+            });
+
+            // Band
+            const torusGeo = new THREE.TorusGeometry(1.3, 0.15, 16, 100);
+            const band = new THREE.Mesh(torusGeo, goldMat);
+            
+            // Diamond Holder
+            const holderGeo = new THREE.CylinderGeometry(0.2, 0.1, 0.3, 8);
+            const holder = new THREE.Mesh(holderGeo, goldMat);
+            holder.position.y = 1.45;
+
+            // Main Diamond
+            const stoneGeo = new THREE.OctahedronGeometry(0.6, 0); // Sharp diamond shape
+            const stone = new THREE.Mesh(stoneGeo, diamondMat);
+            stone.position.y = 1.8;
+            
+            ringMesh = new THREE.Group();
+            ringMesh.add(band);
+            ringMesh.add(holder);
+            ringMesh.add(stone);
+            
+            // Initial Rotation (so it looks nice before animating)
+            ringMesh.rotation.x = 0.2; 
+            
+            ringScene.add(ringMesh);
+
+            // Lighting to make it POP
+            const pointLight = new THREE.PointLight(0xffffff, 2, 20);
+            pointLight.position.set(5, 5, 5);
+            ringScene.add(pointLight);
+            
+            const pointLight2 = new THREE.PointLight(0xffd700, 1, 20);
+            pointLight2.position.set(-5, -5, 5);
+            ringScene.add(pointLight2);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+            ringScene.add(ambient);
+
+            function animateRing() {
+                requestAnimationFrame(animateRing);
+                if(ringMesh) {
+                    ringMesh.rotation.y += 0.01; // Slow elegant spin
+                }
+                ringRenderer.render(ringScene, ringCamera);
+            }
+            animateRing();
+        }
+
+        // --- DAY 3: CHOCOLATE (SCRATCH) ---
+        function openChocolateMode() {
+            openOverlay('chocolate-overlay');
+            initScratch();
+        }
+        
+        function initScratch() {
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.querySelector('.scratch-container');
+            
+            // Set canvas size
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+
+            // Fill with wrapper color
+            ctx.fillStyle = '#5d4037'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add texture/pattern
+            ctx.fillStyle = '#4e342e';
+            for(let i=0; i<20; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*20, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            // Add text "Scratch Me"
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("SCRATCH TO REVEAL", canvas.width / 2, canvas.height / 2);
+
+            let isDrawing = false;
+            let isRevealed = false; 
+            let scratchCount = 0; 
+
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: (e.clientX || e.touches[0].clientX) - rect.left,
+                    y: (e.clientY || e.touches[0].clientY) - rect.top
+                };
+            };
+
+            const checkScratchPercentage = () => {
+                if (isRevealed) return;
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentPixels = 0;
+                const totalPixels = pixels.length / 4;
+
+                for (let i = 3; i < pixels.length; i += 128) {
+                    if (pixels[i] === 0) {
+                        transparentPixels++;
+                    }
+                }
+                
+                const percentage = (transparentPixels / (totalPixels / 32)) * 100;
+
+                if (percentage > 40) { // Slightly easier threshold for better feel
+                    isRevealed = true;
+                    
+                    // 1. Fade out
+                    canvas.style.transition = "opacity 1s ease";
+                    canvas.style.opacity = "0";
+                    
+                    // 2. Confetti Burst with Z-INDEX FIX
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 },
+                        zIndex: 999  // <--- THIS FIXES THE ISSUE
+                    });
+
+                    // 3. Remove canvas
+                    setTimeout(() => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        canvas.style.display = 'none';
+                    }, 1000);
+                }
+            };
+
+            const scratch = (e) => {
+                if (!isDrawing || isRevealed) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 30, 0, Math.PI * 2);
+                ctx.fill();
+
+                scratchCount++;
+                if (scratchCount % 10 === 0) {
+                    checkScratchPercentage();
+                }
+            };
+
+            canvas.addEventListener('mousedown', () => isDrawing = true);
+            canvas.addEventListener('touchstart', () => isDrawing = true);
+            window.addEventListener('mouseup', () => isDrawing = false);
+            window.addEventListener('touchend', () => isDrawing = false);
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('touchmove', scratch);
+        }
+
+        // --- DAY 4: TEDDY ---
+        function openTeddyMode() {
+            openOverlay('teddy-overlay');
+            document.addEventListener('mousemove', moveTeddyEyes);
+        }
+        
+        function moveTeddyEyes(e) {
+            const eyes = document.querySelectorAll('.pupil');
+            eyes.forEach(eye => {
+                const rect = eye.getBoundingClientRect();
+                
+                // 1. Get the center of the eye
+                const x = rect.left + (rect.width / 2);
+                const y = rect.top + (rect.height / 2);
+                
+                // 2. Calculate the angle between the eye and the mouse
+                // Math.atan2(dy, dx) is the standard way to find direction
+                const radian = Math.atan2(e.clientX - x, e.clientY - y);
+                
+                // 3. Convert to degrees and invert (-1) to match CSS rotation
+                const rot = (radian * (180 / Math.PI) * +1) + 90;
+                
+                // 4. Apply rotation and move the pupil slightly outward (3px)
+                eye.style.transform = `rotate(${rot}deg) translate(3px)`;
+            });
+
+            // --- Shy Logic (Kept the same) ---
+            const teddy = document.querySelector('.teddy-bear');
+            const teddyRect = teddy.getBoundingClientRect();
+            // Calculate distance from center of bear
+            const bearCenterX = teddyRect.left + (teddyRect.width / 2);
+            const bearCenterY = teddyRect.top + (teddyRect.height / 2);
+            
+            const dist = Math.hypot(e.clientX - bearCenterX, e.clientY - bearCenterY);
+            
+            // Increased distance threshold since bear is bigger now
+            if(dist < 150) teddy.classList.add('shy');
+            else teddy.classList.remove('shy');
+        }
+        function dressTeddy() {
+            const pieces = ['.turban', '.sherwani', '.belt', '.sword'];
+            pieces.forEach(selector => {
+                document.querySelector(selector).classList.toggle('hidden');
+            });
+    
+            // Check if we just turned it ON (turban is no longer hidden)
+            if(!document.querySelector('.turban').classList.contains('hidden')) {
+                // FIXED: Added zIndex: 999 to ensure it appears ABOVE the dark overlay
+                confetti({
+                    particleCount: 150, // Increased count for royal feel
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#ffd700', '#ffffff', '#ff0000'], // Gold, White, Red
+                    zIndex: 999 // <--- THIS IS THE KEY FIX
+                });
+            }
+        }
+
+        // --- DAY 5: PROMISE ---
+        let signaturePad;
+        function openPromiseMode() {
+            openOverlay('promise-overlay');
+            const canvas = document.getElementById('sig-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            
+            let drawing = false;
+            canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+            canvas.addEventListener('mousemove', (e) => { if(drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+            canvas.addEventListener('mouseup', () => drawing = false);
+        }
+        function submitContract() {
+            const stamp = document.getElementById('stamp');
+            stamp.classList.remove('hidden');
+            stamp.classList.add('stamped');
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 999 });
+        }
+        
+        function clearSignature() {
+            const canvas = document.getElementById('sig-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function openHugMode() {
+            openOverlay('hug-overlay');
+            const btn = document.getElementById('hug-btn');
+            const left = document.querySelector('.left-arm');
+            const right = document.querySelector('.right-arm');
+            const heart = document.querySelector('.heart-center');
+            const mergedPic = document.getElementById('final-hug-pic');
+            
+            let pressInterval;
+            let distance = -40; // Start at CSS position
+            const maxMove = 60; // Target center
+
+            const startHugging = (e) => {
+                e.preventDefault(); 
+                
+                pressInterval = setInterval(() => {
+                    if (distance < maxMove) {
+                        distance += 3; 
+                        
+                        // 1. Move Arms
+                        left.style.left = `${distance}px`;
+                        right.style.right = `${distance}px`;
+                        
+                        // Rotate Arms
+                        left.querySelector('img').style.transform = `rotate(${-distance / 10}deg)`;
+                        right.querySelector('img').style.transform = `rotate(${distance / 10}deg)`;
+                        
+                        // 2. MOVE HEART (The Fix)
+                        // 'lift' increases as they get closer
+                        let lift = (distance + 50) * 2; 
+                        let scale = 1 + (distance / 200);
+                        
+                        // STRICT TRANSFORM: 
+                        // 1. Keep it centered (-50%, -50%)
+                        // 2. Move it UP (translateY -lift)
+                        // 3. Scale it
+                        heart.style.transform = `translate(-50%, -50%) translateY(-${lift}px) scale(${scale})`;
+
+                    } else {
+                        // --- CLIMAX ---
+                        clearInterval(pressInterval);
+                        navigator.vibrate([100, 50, 100]); 
+                        
+                        left.style.opacity = '0';
+                        right.style.opacity = '0';
+                        heart.style.opacity = '0';
+                        
+                        mergedPic.classList.add('show');
+
+                        btn.innerText = "HUGGED TIGHT! ❤️";
+                        btn.style.background = "#4CAF50"; 
+                        
+                        confetti({
+                            particleCount: 200,
+                            spread: 150,
+                            origin: { y: 0.6 },
+                            colors: ['#ff0000', '#ffffff', '#ff69b4'],
+                            zIndex: 9999 
+                        });
+                    }
+                }, 20); 
+            };
+
+            const releaseHug = (e) => {
+                e.preventDefault();
+                clearInterval(pressInterval);
+                
+                if (distance < maxMove) {
+                    distance = -40; 
+                    
+                    left.style.left = '-40px';
+                    right.style.right = '-40px';
+                    
+                    left.querySelector('img').style.transform = 'rotate(0deg)';
+                    right.querySelector('img').style.transform = 'rotate(0deg)';
+                    
+                    // RESET HEART
+                    heart.style.transform = 'translate(-50%, -50%) scale(1)';
+                    
+                    left.style.opacity = '1';
+                    right.style.opacity = '1';
+                    heart.style.opacity = '1';
+                    mergedPic.classList.remove('show');
+                    
+                    heart.innerText = "❤️";
+                    btn.innerText = "HOLD FOR HUG 🫂";
+                    btn.style.background = "#ff4d6d";
+                }
+            };
+
+            btn.addEventListener('mousedown', startHugging);
+            btn.addEventListener('mouseup', releaseHug);
+            btn.addEventListener('mouseleave', releaseHug);
+            btn.addEventListener('touchstart', startHugging);
+            btn.addEventListener('touchend', releaseHug);
+        }
+
+        // --- DAY 7: KISS (CANVAS & BIG LIPS) ---
+        let kissCanvas, kissCtx;
+        let lipImg = new Image();
+        // Using a high-quality lipstick print image
+        lipImg.src = "8546.png";
+
+        function openKissMode() {
+            openOverlay('kiss-overlay');
+            
+            const container = document.querySelector('.kiss-canvas-container');
+            const counter = document.getElementById('kiss-count-badge');
+            kissCanvas = document.getElementById('kiss-canvas');
+            kissCtx = kissCanvas.getContext('2d');
+            
+            // Set canvas resolution to match display size (High DPI sharpness)
+            kissCanvas.width = container.clientWidth;
+            kissCanvas.height = container.clientHeight;
+            
+            let kisses = 0;
+            counter.innerText = `Kisses: 0`;
+            
+            // Clear previous kisses if re-opened
+            kissCtx.clearRect(0, 0, kissCanvas.width, kissCanvas.height);
+
+            const placeKiss = (e) => {
+                // Get click coordinates relative to canvas
+                const rect = kissCanvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+                // 1. Play Sound
+                const audio = document.getElementById("kiss-355162.mp3"); 
+                if (audio) { 
+                    audio.currentTime = 0; // Rewind to start for rapid clicks
+                    audio.play().catch(() => {}); // Play click sound
+                }
+
+                // 2. Draw the Kiss Image
+                const size = 150; // Big "Actual Lip Size"
+                const angle = Math.random() * 0.5 - 0.25; // Slight random rotation
+
+                kissCtx.save();
+                kissCtx.translate(x, y);
+                kissCtx.rotate(angle);
+                // Draw image centered at click
+                kissCtx.globalAlpha = 0.85; // Slightly transparent like real lipstick
+                kissCtx.drawImage(lipImg, -size/2, -size/2, size, size);
+                kissCtx.restore();
+
+                // 3. Update Logic
+                kisses++;
+                counter.innerText = `Kisses: ${kisses}`;
+
+                // Trigger celebration after 4 kisses (since they are big)
+                if(kisses === 4) {
+                    navigator.vibrate(200);
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 },
+                        colors: ['#ff1493', '#ff69b4', '#ffffff']
+                    });
+                    
+                    // Show a sweet alert
+                    setTimeout(() => {
+                        alert("Filled with Love! ❤️");
+                    }, 500);
+                }
+            };
+
+            kissCanvas.onclick = placeKiss;
+            // Add touch support just in case
+            kissCanvas.ontouchstart = (e) => { e.preventDefault(); placeKiss(e); };
+        }
+
+        // --- MANIFESTATION (NAZAR) ---
+        function openManifestMode() {
+            openOverlay('manifest-overlay');
+            
+            const container = document.querySelector('.manifest-canvas-container');
+            const canvas = document.getElementById('manifest-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set resolution
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            
+            // Clear on open
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const placeNazar = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+                // Draw Evil Eye Emoji
+                ctx.font = "50px Arial"; // Big size
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("🧿", x, y);
+
+                // Small vibration for feedback
+                if (navigator.vibrate) navigator.vibrate(50);
+            };
+
+            canvas.onclick = placeNazar;
+            canvas.ontouchstart = (e) => { e.preventDefault(); placeNazar(e); };
+        }
+
+    </script>
+</body>
+</html>

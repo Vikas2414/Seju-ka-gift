@@ -641,17 +641,18 @@
         #box-container { 
             perspective: 1000px; 
             width: 220px; 
-            height: 120px; /* Reduced height to keep base slim */
+            height: 120px; 
             position: relative; 
-            margin-top: 0; /* Remove top margins */
+            margin-top: 0; 
             overflow: visible !important;
+            z-index: 100;
         }
         
         .jewelry-box {
             width: 100%; height: 100%; 
             position: relative; 
             transform-style: preserve-3d;
-            -webkit-transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d; /* Safari Fix */
             overflow: visible !important;
         }
         /* The Bottom of the Box */
@@ -667,71 +668,55 @@
             display: flex; 
             justify-content: center; 
             align-items: center;
+            
             transform-style: preserve-3d;
             -webkit-transform-style: preserve-3d;
         }
 
         /* The Gold Trim/Clasp */
         .box-base::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            width: 40px;
-            height: 10px;
+            content: ''; position: absolute; top: 10px; width: 40px; height: 10px;
             background: linear-gradient(to right, #daa520, #ffd700, #daa520);
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
 
         /* The Lid */
         .lid {
-            position: absolute; 
-            top: 0; 
-            width: 220px; 
-            height: 100px; 
+            position: absolute; top: 0; width: 220px; height: 100px; 
             background: radial-gradient(circle at center, #a02240, #5c1224); 
             border-radius: 20px 20px 0 0; 
             transform-origin: bottom;
             transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
             box-shadow: inset 0 -5px 20px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
+            display: flex; justify-content: center; align-items: flex-end;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
         }
 
         /* Lid Interior */
         .lid-interior {
-            position: absolute;
-            width: 100%; height: 100%;
+            position: absolute; width: 100%; height: 100%;
             background: #fdf0f3; 
             border-radius: 20px 20px 0 0;
-            transform: rotateX(180deg); 
-            
-            /* CRITICAL: Allows the photo to exist in 3D space */
-            transform-style: preserve-3d; 
-            
+            transform: rotateX(180deg) translateZ(1px); /* Prevent Z-fighting */
+            transform-style: preserve-3d;
             backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            display: flex; justify-content: center; align-items: center;
         }
-        
-        /* WE REMOVED THE ::after RULE SO NO TEXT APPEARS */
 
         .lid.open { 
-            transform: rotateX(110deg) translateZ(-50px); 
-            z-index: 1; 
+            transform: rotateX(110deg) translateZ(-10px); 
+            z-index: -1; /* Push behind when open */
         }
         
-        /* --- FIX: POP UP PHOTO ALIGNMENT --- */
+        /* --- FIX: POP UP PHOTO --- */
         .pop-up-photo {
             position: absolute;
             bottom: 20px;            
             left: 50%;
-            /* Start small and inside the box */
-            transform: translateX(-50%) scale(0.2) translateZ(10px); 
+            /* Start hidden inside */
+            transform: translateX(-50%) scale(0.5); 
             width: 200px;            
             height: auto;           
             max-height: 350px; 
@@ -743,15 +728,16 @@
             z-index: 50; 
             opacity: 0;
             
-            /* ANIMATION SETTINGS */
-            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease;
+            /* Animation Settings */
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
             
-            /* CRITICAL MOBILE FIXES */
+            /* STABILITY FIXES */
             -webkit-backface-visibility: visible !important;
             backface-visibility: visible !important;
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
-            will-change: transform, opacity;
+            /* Force GPU to keep it active */
+            will-change: transform; 
         }
 
         /* The Wrapper for Photo + Ring */
@@ -762,37 +748,39 @@
             display: flex;
             justify-content: center;
             opacity: 0;
-            transform: translateY(20px) scale(0.5); 
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(20px); 
+            transition: all 1.2s ease;
             z-index: 50;
             pointer-events: none;
             
-            /* CRITICAL MOBILE FIXES */
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
         }
 
-        /* THIS IS THE MISSING RULE THAT FIXES IT */
+        /* --- THE POPPED STATE (Active) --- */
+
+        /* 1. Make wrapper visible & move up slightly */
         .jewelry-box.popped #ring-wrapper {
-            opacity: 1 !important;
-            /* Move up, but don't scale the wrapper, scale the children instead */
-            transform: translateY(-50px) scale(1) !important;
-            z-index: 9999;
+             opacity: 1 !important;
+             transform: translateY(-50px) !important;
+             z-index: 9999;
         }
 
-        /* 2. Move the PHOTO up */
+        /* 2. Photo POP UP */
         .jewelry-box.popped .pop-up-photo {
             opacity: 1 !important;
-            /* translateZ(150px) is safer than 500px. It ensures it stays "inside" the screen */
-            transform: translateX(-50%) translateY(-300px) scale(1.15) translateZ(150px) !important; 
+            /* TRICK: We add 'rotateZ(0.1deg)' to force the phone 
+               to keep rendering the pixels. 
+               We also reduced translateZ to 50px to avoid camera clipping.
+            */
+            transform: translateX(-50%) translateY(-300px) scale(1.15) translateZ(50px) rotateZ(0.1deg) !important; 
             z-index: 9999 !important;
         }
 
-        /* Aligning the Ring with the Photo */
+        /* 3. Ring POP UP */
         .jewelry-box.popped #ring-canvas-container {
             opacity: 1 !important;
-            /* Ring sits slightly in front of photo (180px vs 150px) */
-            transform: translateY(-250px) scale(1.3) translateZ(180px) !important;
+            transform: translateY(-250px) scale(1.3) translateZ(80px) rotateZ(0.1deg) !important;
         }
 
         #ring-canvas-container {
@@ -801,7 +789,8 @@
             position: relative;
             z-index: 10000;
             opacity: 0;
-            transform: scale(0.5) translateZ(50px);
+            transform: scale(0.5);
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* --- DAY 3: SCRATCH (Updated for 9:16 Photo) --- */

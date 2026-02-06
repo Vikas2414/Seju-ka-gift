@@ -715,8 +715,9 @@
             position: absolute;
             bottom: 20px;            
             left: 50%;
-            /* Start hidden inside */
-            transform: translateX(-50%) scale(0.5); 
+            /* Start Position: Small and hidden */
+            transform: translateX(-50%) translateY(0) scale(0.5); 
+            
             width: 200px;            
             height: auto;           
             max-height: 350px; 
@@ -724,37 +725,38 @@
             background-color: #fff; 
             border: 5px solid #fff; 
             border-radius: 12px;
+            
+            /* Shadow adds depth between photo and ring */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             z-index: 50; 
-            opacity: 0;
             
-            /* Animation Settings */
-            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+            /* Slower transition for the photo scaling effect */
+            transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             
-            /* STABILITY FIXES */
-            -webkit-backface-visibility: visible !important;
-            backface-visibility: visible !important;
-            -webkit-transform-style: preserve-3d;
-            transform-style: preserve-3d;
-            /* Force GPU to keep it active */
-            will-change: transform; 
+            -webkit-backface-visibility: hidden; /* Hides jagged edges */
+            backface-visibility: hidden;
         }
 
-        /* The Wrapper for Photo + Ring */
         #ring-wrapper {
             position: absolute;
             bottom: 30px;
             width: 100%;
             display: flex;
             justify-content: center;
-            opacity: 0;
+            
+            /* Start slightly lower and inheriting the box's tilt */
             transform: translateY(20px); 
-            transition: all 1.2s ease;
+            opacity: 0;
+            
+            /* Smooth transition for the rising action */
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
             z-index: 50;
             pointer-events: none;
             
+            /* Essential for mobile rendering */
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
+            will-change: transform;
         }
 
         /* --- THE POPPED STATE (Active) --- */
@@ -762,30 +764,30 @@
         /* 1. Make wrapper visible & move up slightly */
         .jewelry-box.popped #ring-wrapper {
              opacity: 1 !important;
-             transform: translateY(-50px) !important;
+             /* translateY(-60px): Moves it UP out of the box
+                rotateX(-20deg): COUNTER-ROTATES to fix the tilt!
+             */
+             transform: translateY(-60px) rotateX(-20deg) !important;
              z-index: 9999;
         }
 
         /* 2. Photo POP UP */
         .jewelry-box.popped .pop-up-photo {
-            opacity: 1 !important;
-            /* TRICK: We add 'rotateZ(0.1deg)' to force the phone 
-               to keep rendering the pixels. 
-               We also reduced translateZ to 50px to avoid camera clipping.
+            /* translateZ(10px): Keeps it slightly separated from wrapper
+               scale(1.0): Full size
+               translateY(-280px): Moves it HIGH above the box
             */
-            transform: translateX(-50%) translateY(-320px) scale(1.0) translateZ(50px) rotateZ(0.1deg) !important; 
-            z-index: 9999 !important;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transform: translateX(-50%) translateY(-280px) scale(1.0) translateZ(10px) !important; 
         }
 
         /* 3. Ring POP UP */
         .jewelry-box.popped #ring-canvas-container {
             opacity: 1 !important;
-            /* Move up less (-160px) so it sits BELOW the photo */
-            /* Scale down to 0.8 so it looks like a ring, not a hoop */
-            transform: translateY(-160px) scale(0.8) translateZ(80px) rotateZ(0.1deg) !important;
+            /* Ring stays lower (-140px) than the photo */
+            transform: translateY(-140px) scale(0.8) translateZ(50px) !important;
         }
 
+        /* Ring Base Styles */
         #ring-canvas-container {
             width: 160px;
             height: 160px;
@@ -793,8 +795,7 @@
             z-index: 10000;
             opacity: 0;
             transform: scale(0.5);
-            /* Slower transition for the ring so it follows the photo */
-            transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
         }
         /* --- DAY 3: SCRATCH (Updated for 9:16 Photo) --- */
         .scratch-container { 

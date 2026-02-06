@@ -242,13 +242,20 @@
             border: 1px solid #ffccd5;
         }
 
-        .gif-container img {
-            width: 100%;
-            max-width: 200px;
+        .gif-box img { 
+            width: auto; 
             height: auto;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            max-width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            
+            /* Remove border/shadow for a cleaner look */
+            border: none;
+            box-shadow: none;
+            border-radius: 10px;
+            
+            /* Add a subtle drop shadow to lift it off the page */
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
 
         h1 {
@@ -843,12 +850,9 @@
             justify-content: center; 
             align-items: flex-end; 
             box-shadow: 0 0 40px rgba(255, 192, 203, 0.4);
-            margin-bottom: 20px;
+            margin: 0 auto 20px auto; /* Centers the stage horizontally */
             overflow: visible;
-            
-            /* FIXED: Move bear slightly left so bubble fits on screen */
-            margin-right: 40px; 
-            transform: scale(1.1); /* Make it slightly bigger */
+            transform: scale(1.1);
         }
 
         /* 1. MAKE TEDDY BIGGER */
@@ -953,11 +957,11 @@
         /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER --- */
         .thought-bubble {
             position: absolute;
-            top: -10px;          
-            right: -80px;  /* Brought closer (was -130px) */
+            top: -20px;          
+            right: -60px; /* Moved closer to the bear so it doesn't get cut off */
             z-index: 10;
             animation: floatDream 3s ease-in-out infinite;
-            transform: scale(0.9); /* Slight adjust to fit mobile width */
+            transform: scale(0.85); /* Slightly smaller bubble */
         }
 
         /* The Photo Inside */
@@ -1014,42 +1018,33 @@
 
         /* 2. The Less-Translucent "Glass" Box */
         .contract-content {
-            /* CHANGED: Lower opacity (0.6) so the background photo is visible */
-            background: rgba(255, 255, 255, 0.6); 
+            /* Much more transparent (0.4) so the photo is clearly visible */
+            background: rgba(255, 255, 255, 0.4); 
             
-            backdrop-filter: blur(3px); 
+            /* Stronger blur to keep text readable */
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            
             margin: 10px;
-            padding: 15px; 
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 20px; 
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
             width: 90%;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
         /* Make the text BOLD and darker for readability */
-        .contract-content ul li {
-            font-weight: 700; /* Bold text */
-            color: #1a0509;   /* Almost black/dark red for contrast */
-            text-shadow: 0 1px 2px rgba(255,255,255,0.9); /* White glow behind text */
-            margin-bottom: 8px;
-        }
-
         .contract-content h2 {
             font-family: 'Great Vibes', cursive;
-            font-size: 1.8rem !important; /* Smaller size to fit one line */
-            margin-bottom: 10px;
+            font-size: 2.0rem !important; /* Force smaller size */
+            margin-bottom: 15px;
             text-align: center;
-            white-space: nowrap; /* Forces text to stay on one line */
+            line-height: 1;
+            white-space: nowrap; /* Prevents wrapping to second line */
             color: #d81b60;
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.8);
-        }
-        
-        .contract-content p {
-            font-weight: 700;
-            color: #1a0509;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.9);
         }
 
         #sig-canvas { border: 2px dashed #ccc; width: 100%; height: 80px; margin-top: 10px; cursor: crosshair; }
@@ -1571,9 +1566,7 @@
         
         <div class="contract-paper">
             <div class="contract-content">
-                
-                <h2 style="color: #d81b60; font-family: 'Great Vibes'; margin-bottom: 10px; text-align:center; text-shadow: 2px 2px 0px rgba(255,255,255,0.8);">❤️ The Love Contract ❤️</h2>
-                
+                <h2>❤️ The Love Contract ❤️</h2>                
                 <p style="font-size: 1.1rem; margin-bottom: 10px; text-align: center; font-weight: bold;">I, the beautiful and amazing <strong>Seju</strong>, hereby solemnly promise to:</p>
                 
                 <ul style="text-align:left; padding-left:20px; font-size:1rem; line-height:1.7; color: #444;">
@@ -2185,15 +2178,25 @@
         }
 
         // --- OVERLAY UTILITIES ---
+        // --- OVERLAY UTILITIES (Updated to Hide Page Buttons) ---
         function openOverlay(id) {
             const overlay = document.getElementById(id);
             overlay.style.display = 'flex';
             setTimeout(() => overlay.style.opacity = '1', 50);
+            
+            // HIDE the buttons from the main book page so they don't show through
+            const pageButtons = document.querySelectorAll('.next-btn');
+            pageButtons.forEach(btn => btn.style.visibility = 'hidden');
         }
+
         function closeOverlay(id) {
             const overlay = document.getElementById(id);
             overlay.style.opacity = '0';
             setTimeout(() => overlay.style.display = 'none', 500);
+            
+            // SHOW the buttons again when closed
+            const pageButtons = document.querySelectorAll('.next-btn');
+            pageButtons.forEach(btn => btn.style.visibility = 'visible');
         }
         
 // --- DAY 2: PROPOSE (RING) ---

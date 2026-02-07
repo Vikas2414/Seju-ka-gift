@@ -758,26 +758,29 @@
 
         /* --- THE POPPED STATE (Fixed Position) --- */
 
-        /* 1. Lift the Wrapper */
+        /* --- THE POPPED STATE (Fixed Position) --- */
+
+        /* 1. Lift the Wrapper (LOWERED CLOSER TO BOX) */
         .jewelry-box.popped #ring-wrapper {
              opacity: 1 !important;
-             /* Rotate -20deg to straighten it up */
-             transform: translateY(-60px) rotateX(-20deg) !important;
+             /* CHANGED: -60px -> -10px (Brings the whole group down) */
+             transform: translateY(-10px) rotateX(-20deg) !important;
              z-index: 9999;
         }
 
-        /* 2. Photo: High up & Stable */
+        /* 2. Photo: MUCH LOWER now */
         .jewelry-box.popped .pop-up-photo {
             opacity: 1 !important;
-            /* CHANGED: Reduced translateY from -340px to -260px to close the gap */
-            transform: translateX(-50%) translateY(-260px) scale(1.0) translateZ(10px) rotateZ(360deg) !important; 
+            /* CHANGED: -340px -> -210px (Drastically lowers photo to close gap) */
+            transform: translateX(-50%) translateY(-210px) scale(1.0) translateZ(10px) rotateZ(360deg) !important; 
             z-index: 9999 !important;
         }
         
-        /* Keep Ring Container Lower so it doesn't overlap the feet */
+        /* 3. Ring: Lowered to sit nicely above the box */
         .jewelry-box.popped #ring-canvas-container {
             opacity: 1 !important;
-            transform: translateY(-100px) scale(0.8) translateZ(50px) rotateZ(360deg) !important;
+            /* CHANGED: -100px -> -60px (Lowers the ring) */
+            transform: translateY(-60px) scale(0.8) translateZ(50px) rotateZ(360deg) !important;
         }
 
         /* Ring Base Styles */

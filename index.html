@@ -956,7 +956,7 @@
         }
         
         .thought-bubble img {
-            width: 140px; /* Slightly smaller to fit nicely next to belly */
+            width: 225px; /* Slightly smaller to fit nicely next to belly */
             height: auto;
             border: 4px solid #fff;
             border-radius: 15px;
@@ -976,7 +976,7 @@
         .dot-2 { width: 15px; height: 15px; top: -30px; left: -20px; opacity: 0.9; }
         .dot-3 { width: 22px; height: 22px; top: -15px; left: -10px; }
         .dot-4 { width: 30px; height: 30px; top: 0px; left: 0px; } /* Connects to photo */
-        
+
         /* Float Animation */
         @keyframes floatDream {
             0%, 100% { transform: translateY(0); }
@@ -1011,9 +1011,9 @@
         /* 2. The Less-Translucent "Glass" Box */
         .contract-content {
             /* Solid white with slight transparency for readability */
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.55); 
             
-            backdrop-filter: blur(5px); 
+            backdrop-filter: blur(2px); 
             margin: 10px;
             padding: 20px; 
             border-radius: 10px;
@@ -1185,6 +1185,32 @@
             z-index: 10;
         }
 
+        /* --- DAY 8: LOVE LETTER (Paper Style) --- */
+        .paper-scroll {
+            width: 300px;
+            height: 450px;
+            background: #fffdf0; /* Cream paper color */
+            border: 1px solid #e0d8b0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            overflow-y: scroll;
+            border-radius: 5px;
+            position: relative;
+            
+            /* Lined Paper Effect */
+            background-image: repeating-linear-gradient(transparent, transparent 29px, #afe0ea 30px);
+            line-height: 30px;
+            font-family: 'Playfair Display', serif; /* Handwritten feel */
+            color: #555;
+        }
+        
+        /* Custom Scrollbar */
+        .paper-scroll::-webkit-scrollbar { width: 8px; }
+        .paper-scroll::-webkit-scrollbar-thumb { background: #d81b60; border-radius: 4px; }
+        
+        .letter-content p { margin-bottom: 30px; font-size: 1.1rem; }
+        .highlight-date { background: #ffe0e6; padding: 0 5px; border-radius: 3px; font-weight: bold; color: #d81b60; }
+
         /* --- MANIFESTATION (EVIL EYE) --- */
         .manifest-canvas-container {
             position: relative;
@@ -1333,7 +1359,7 @@
             <div class="page" style="z-index: 10;">
                 <div class="day-badge">Day 1: Rose Day 🌹</div>
                 <h2>My Beautiful Rose</h2>
-                <div class="gif-box"><img src="https://media.tenor.com/5hNFjHWQYKQAAAAi/bubu-dudu-sseeyall.gif"></div>
+                <div class="gif-box"><img src="https://media.tenor.com/N7GiO8UsfooAAAAi/bubu-dudu-heart.gif"></div>
                 <p>To the flower that blooms in my heart forever.</p>
                 
                 <button class="plant-garden-btn" onclick="openGarden()" style="position: relative; z-index: 50;">
@@ -1346,7 +1372,9 @@
             <div class="page" style="z-index: 9;">
                 <div class="day-badge">Day 2: Propose Day 💍</div>
                 <h2>The Golden Surprise</h2>
-                <div class="gif-box"><img src="https://media.tenor.com/N7GiO8UsfooAAAAi/bubu-dudu-heart.gif"></div>
+                <div class="gif-box">
+                    <img src="https://media.tenor.com/pmB6eX_aMQ4AAAAi/bubu-dudu-sseeyall.gif" style="border-radius:10px; width:100%;">
+                </div>
                 <p>My heart, captured in gold, just for you.</p>
                 <button class="plant-garden-btn" onclick="openProposeMode()" style="background: linear-gradient(135deg, #ffd700, #ffecb3); color: #8a6e00; border-color: #eec900;">
                     🎁 Open The Box
@@ -1399,7 +1427,7 @@
                 </div>
             </div>
 
-            <div class="page" style="z-index: 5;">
+            <div class="page" style="z-index: 4;">
                 <div class="day-badge">Day 6: Hug Day 🫂</div>
                 <h2>Hug Meter</h2>
                 <div class="gif-box"><img src="https://media.tenor.com/0BlLAI6vIhoAAAAi/tkthao219-bubududu.gif"></div>
@@ -1419,7 +1447,7 @@
                 </div>
             </div>
 
-            <div class="page" style="z-index: 4;">
+            <div class="page" style="z-index: 5;">
                 <div class="day-badge">Day 7: Kiss Day 💋</div>
                 <h2>Sealed with a Kiss</h2>
                 <div class="gif-box"><img src="https://media1.tenor.com/m/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif"></div>
@@ -1434,6 +1462,22 @@
             </div>
 
             <div class="page" style="z-index: 3;">
+                <div class="day-badge">Day 8: Valentine's Day ❤️</div>
+                <h2>My Forever Valentine</h2>
+                <div class="gif-box"><img id="valentine-gif" src="https://media.tenor.com/IemjH9fXAm8AAAAj/tkthao219-bubududu.gif"></div>
+                <p>We made it, Seju. From strangers to soulmates.</p>
+                
+                <button class="plant-garden-btn" onclick="openLetterMode()" style="background: linear-gradient(135deg, #ff0000, #b71c1c); color: white; box-shadow: 0 8px 20px rgba(183, 28, 28, 0.4);">
+                    💌 Read Our Journey
+                </button>
+
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    <div class="next-btn" onclick="flipPage(this)">Next ➡️</div>
+                </div>
+            </div>
+
+            <div class="page" style="z-index: 2;">
                 <div class="day-badge" style="background:#d81b60; color:white; box-shadow:0 4px 10px rgba(216, 27, 96, 0.4);">
                     The Big Day 👰🤵
                 </div>
@@ -1446,17 +1490,24 @@
                 <p>Can't wait to make you mine forever.</p>
 
                 <div id="countdown-mini" style="transform: scale(1.3); margin: 20px 0; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <span id="days">00</span>d <span id="hours">00</span>h <span id="minutes">00</span>m
+                    <span id="days">00</span>d <span id="hours">00</span>h <span id="minutes">00</span>m <span id="seconds">00</span>s
                 </div>
 
-                <p style="font-size: 0.9rem; margin-top: 5px; color:#d81b60; font-weight:bold;">February 21, 2026</p>
-
+                <p style="font-size: 0.9rem; margin-top: 5px; color:#d81b60; font-weight:bold;">1 PM, February 21, 2026...</p>
+                <p style="font-size: 0.9rem; margin-top: 5px; color:#d81b60; font-weight:bold;">Bas itne din aur before i call you my wife!💕</p>
+                
                 <button class="plant-garden-btn" onclick="openManifestMode()" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); margin-top: 20px; box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);">
                     🧿 Manifestation
                 </button>
 
+                <input type="file" id="camera-input" accept="image/*" capture="user" style="display:none;" onchange="cameraClickSuccess()">
+
                 <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
                     <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
+                    
+                    <div class="next-btn" onclick="triggerCamera()" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(37, 117, 252, 0.4);">
+                        📸 Selfie
+                    </div>
                 </div>
             </div>
 
@@ -1630,6 +1681,40 @@
         <p class="instruction-text">Tap to fill the photo with kisses! 💋</p>
     </div>
 
+    <div id="letter-overlay" class="hidden-overlay">
+        <button class="close-overlay" onclick="closeOverlay('letter-overlay')">✖</button>
+        
+        <div class="paper-scroll">
+            <div class="letter-content">
+                <h2 style="text-align:center; color:#d81b60; margin-bottom:20px; font-family:'Great Vibes'; font-size:2.5rem; line-height:1.2;">My Dearest Seju,</h2>
+                
+                <p>Do you remember <span class="highlight-date">March 9th</span>? Capital Mall, India vs NZ match, and good vibes? 🏏 Who knew that one meeting would turn into 49?</p>
+
+                <p>From our <strong>Roka on the Full Moon (April 13)</strong> where "Me" became "Us", to that shocker of a <span class="highlight-date">First Kiss</span> on the Borivali station (LIPS?! Viku is this me?! 🚂😳).</p>
+
+                <p>We’ve lived a lifetime in these months, baby. 
+                We’ve had the romance—my best Birthday ever in that theater 📽️, the rain-soaked scooty rides to the beach 🌧️, and the mesmerizingly beautiful sunsets wo bhi kabhi Beach pe kabhi Marine Drive ya scooty parked at some isolated road just to watch the sunset.</p>
+
+                <p>But we’ve also handled the <strong>Chaos</strong>.
+                The misunderstood timings, the "1 Lakh Lehenga" struggle 🤯, and hiding from parents in kitchens and living rooms just to steal a hug and those "Agar pakde gaye to kisses and sneak-ins🤫🔥.</p>
+
+                <p>I love everything about you. 
+                I love how you care for me when I'm vulnerable.
+                I love your "Healthy Healthy" vibes (and still sharing pizza and oily maida stuff with me :>).
+                I love the way you look at me, how you copy me, and how you became my Sunflower 🌻.</p>
+
+                <p>We’ve gone from "Sneak-ins" to Pre-wedding. From awkward hellos to being <em>fully</em> comfortable (if you know, you know 😉).</p>
+
+                <p>Now, only days remain until <strong>Feb 21, 2026</strong>. 
+                I promise to keep gifting you sunflowers, handling your mood swings, and loving you through all the chaos.</p>
+
+                <p style="text-align:center; font-weight:bold; margin-top:40px; font-size:1.2rem; color:#d81b60;">I Love You, My Future Wife. ❤️<br>— Your Viku</p>
+            </div>
+        </div>
+        
+        <p class="instruction-text" style="margin-top:10px;">Scroll to read our journey 📜</p>
+    </div>
+        
     <div id="manifest-overlay" class="hidden-overlay">
         <button class="close-overlay" onclick="closeOverlay('manifest-overlay')">✖</button>
         
@@ -1997,13 +2082,17 @@
             const weddingDate = new Date("February 21, 2026 13:00:00").getTime();
             const now = new Date().getTime();
             const gap = weddingDate - now;
+            
             if (gap > 0) {
                 const days = Math.floor(gap / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((gap % (1000 * 60)) / 1000); // Calculate seconds
+
                 if(document.getElementById("days")) document.getElementById("days").innerText = days;
                 if(document.getElementById("hours")) document.getElementById("hours").innerText = hours;
                 if(document.getElementById("minutes")) document.getElementById("minutes").innerText = minutes;
+                if(document.getElementById("seconds")) document.getElementById("seconds").innerText = seconds; // Update seconds
             } else {
                 if(document.getElementById("countdown-mini")) document.getElementById("countdown-mini").innerHTML = "<h3>It's Wedding Day! ❤️</h3>";
             }
@@ -2676,6 +2765,30 @@
             btn.addEventListener('touchstart', startHugging);
             btn.addEventListener('touchend', releaseHug);
         }
+        
+        // --- VALENTINE GIF CYCLER ---
+        const valentineGifs = [
+            "https://media.tenor.com/7x1RhpUqm6wAAAAj/bubu-dudu-sseeyall.gif",        // Original
+            "https://media.tenor.com/AtfozB1d-OoAAAAj/mimibubu.gif",       // Kissing
+            "https://media.tenor.com/mePZoUpf-uMAAAAj/dudu-bubu.gif",    // Hearts
+            "https://media.tenor.com/hmYv6-dCkGgAAAAj/bubu-dudu-bubu.gif",       // Hugging
+            "https://media.tenor.com/zjBDhwhblFMAAAAj/pinching-cheeks-bubu-angry.gif",
+            "https://media.tenor.com/gOVl3OCca-oAAAAj/bubu-angry-bubu-and-dudu.gif",
+            "https://media.tenor.com/T8fPoraSgscAAAAj/bubu-dudu-sseeyall.gif"
+        ];
+        
+        let gifIndex = 0;
+        
+        function cycleGifs() {
+            const img = document.getElementById('valentine-gif');
+            if(img) {
+                gifIndex = (gifIndex + 1) % valentineGifs.length;
+                img.src = valentineGifs[gifIndex];
+            }
+        }
+        
+        // Change GIF every 2.5 seconds
+        setInterval(cycleGifs, 2500);
 
         // --- DAY 7: KISS (CANVAS & BIG LIPS) ---
         let kissCanvas, kissCtx;
@@ -2731,7 +2844,7 @@
                 counter.innerText = `Kisses: ${kisses}`;
 
                 // Trigger celebration after 4 kisses (since they are big)
-                if(kisses === 4) {
+                if(kisses === 10) {
                     navigator.vibrate(200);
                     confetti({
                         particleCount: 150,
@@ -2745,11 +2858,42 @@
                         alert("Filled with Love! ❤️");
                     }, 500);
                 }
+
+                // NEW: Trigger funny message at 25
+                if(kisses === 25) {
+                    navigator.vibrate([100, 50, 100, 50, 100]); // Longer vibration
+                    
+                    // Huge red burst
+                    confetti({
+                        particleCount: 300,
+                        spread: 160,
+                        origin: { y: 0.6 },
+                        colors: ['#ff0000', '#ffffff'] 
+                    });
+
+                    setTimeout(() => {
+                        alert("Ok ok i know you love me more! 😘");
+                    }, 200);
+                }
             };
 
             kissCanvas.onclick = placeKiss;
             // Add touch support just in case
             kissCanvas.ontouchstart = (e) => { e.preventDefault(); placeKiss(e); };
+        }
+
+        function openLetterMode() {
+            openOverlay('letter-overlay');
+            // Trigger soft paper confetti
+            confetti({
+                particleCount: 100,
+                spread: 120,
+                origin: { y: 0.6 },
+                colors: ['#fffdf0', '#d81b60'],
+                shapes: ['square'],
+                scalar: 0.8,
+                zIndex: 2000
+            });
         }
 
         // --- MANIFESTATION (NAZAR) ---

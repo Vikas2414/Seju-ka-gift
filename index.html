@@ -948,20 +948,22 @@
         /* --- 2. THOUGHT BUBBLE PHOTO CONTAINER (UPDATED) --- */
         .thought-bubble {
             position: absolute;
-            top: -20px;          
-            right: -40px; 
+            /* CHANGED: Moved down to belly level */
+            top: 85px;          
+            right: -20px; 
             z-index: 10;
             animation: floatDream 3s ease-in-out infinite;
         }
         
         .thought-bubble img {
-            width: 150px; /* Slightly smaller to ensure it fits the width */
+            width: 140px; /* Slightly smaller to fit nicely next to belly */
             height: auto;
             border: 4px solid #fff;
             border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- 3. THE BUBBLE DOTS TRAIL --- */
+        /* --- 3. THE BUBBLE DOTS TRAIL (UPDATED) --- */
         .bubble-dot {
             position: absolute;
             background: #fff;
@@ -969,12 +971,12 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Dot positions creating a curve from head to bubble */
-        .dot-1 { width: 10px; height: 10px; bottom: -35px; left: -50px; opacity: 0.8; } /* Smallest, closest to head */
-        .dot-2 { width: 15px; height: 15px; bottom: -25px; left: -35px; opacity: 0.9; }
-        .dot-3 { width: 22px; height: 22px; bottom: -10px; left: -20px; }
-        .dot-4 { width: 30px; height: 30px; bottom: 10px; left: -10px; } /* Biggest, connects to photo */
-
+        /* CHANGED: Dots now trail UPWARDS from bubble to head */
+        .dot-1 { width: 10px; height: 10px; top: -45px; left: -30px; opacity: 0.8; } /* Closest to head */
+        .dot-2 { width: 15px; height: 15px; top: -30px; left: -20px; opacity: 0.9; }
+        .dot-3 { width: 22px; height: 22px; top: -15px; left: -10px; }
+        .dot-4 { width: 30px; height: 30px; top: 0px; left: 0px; } /* Connects to photo */
+        
         /* Float Animation */
         @keyframes floatDream {
             0%, 100% { transform: translateY(0); }

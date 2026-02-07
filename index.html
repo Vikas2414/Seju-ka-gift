@@ -1500,14 +1500,16 @@
                     🧿 Manifestation
                 </button>
 
-                <input type="file" id="camera-input" accept="image/*" capture="user" style="display:none;" onchange="cameraClickSuccess()">
+                <input type="file" id="camera-input" accept="image/*" capture="user" 
+                       style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;" 
+                       onchange="cameraClickSuccess()">
 
                 <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
                     <div class="next-btn" onclick="prevPage(this)" style="background:#fff; color:#d81b60; border:2px solid #ffd6de;">◀ Back</div>
                     
-                    <div class="next-btn" onclick="triggerCamera()" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(37, 117, 252, 0.4);">
+                    <label for="camera-input" class="next-btn" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(37, 117, 252, 0.4); display: flex; align-items: center; justify-content: center; margin-top: 5px;">
                         📸 Selfie
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -2928,6 +2930,26 @@
 
             canvas.onclick = placeNazar;
             canvas.ontouchstart = (e) => { e.preventDefault(); placeNazar(e); };
+        }
+
+        function triggerCamera() {
+            const input = document.getElementById('camera-input');
+            if(input) {
+                input.click();
+            }
+        }
+
+        function cameraClickSuccess() {
+            // Give feedback after she takes/selects a photo
+            if(navigator.vibrate) navigator.vibrate(200);
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            setTimeout(() => {
+                alert("You look beautiful my love! ❤️");
+            }, 500);
         }
 
     </script>
